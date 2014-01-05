@@ -160,6 +160,7 @@ class FtpUpdate {
 				"module/Ehome/config/module.config.php",
 				"module/Ehome/src/Ehome/Controller/IndexController.php",
 				"module/Ehome/src/Ehome/Controller/JobaUserController.php",
+				"module/Ehome/src/Ehome/Controller/JsonController.php",
 				"module/Ehome/src/Ehome/Entity/JobaEvent.php",
 				"module/Ehome/src/Ehome/Entity/JobaEventTable.php",
 				"module/Ehome/src/Ehome/Filter/JobaEventFilter.php",

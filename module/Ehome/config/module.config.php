@@ -5,8 +5,9 @@ namespace Ehome;
 return array (
 		'controllers' => array (
 				'invokables' => array (
+						'Ehome\Controller\Index' => 'Ehome\Controller\IndexController',
 						'Ehome\Controller\JobaUser' => 'Ehome\Controller\JobaUserController',
-						'Ehome\Controller\Index' => 'Ehome\Controller\IndexController' 
+						'Ehome\Controller\Json' => 'Ehome\Controller\JsonController',
 				)
 				 
 		)
@@ -14,7 +15,10 @@ return array (
 		'view_manager' => array (
 				'template_path_stack' => array (	
 						'ehome' => __DIR__ . '/../view' 
-				) 
+				),
+				'strategies' => array( // see akrabat.com/zend-framework-2/returning-json-from-a-zf2-controller-action/
+						'ViewJsonStrategy',
+				),
 		),
 		'router' => array (
 				'routes' => array (	
@@ -27,6 +31,19 @@ return array (
 										),
 										'defaults' => array(
 												'controller' => 'Ehome\Controller\Index',
+												'action'     => 'index',
+										),
+								),
+						),
+						'ehomejson' => array(
+								'type' => 'Zend\Mvc\Router\Http\Segment',
+								'options' => array(
+										'route'    => '/ehomejson[/:action][/:id]',
+										'constraints' => array (
+												'id' => '[0-9-_]*'
+										),
+										'defaults' => array(
+												'controller' => 'Ehome\Controller\Json',
 												'action'     => 'index',
 										),
 								),
