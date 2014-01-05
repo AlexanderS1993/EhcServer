@@ -13,8 +13,11 @@ use Zend\Db\Adapter\Adapter;
 use Zend\Form\Form;
 use Zend\Form\Element;
 use Zend\EventManager\Event;
+//use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+//use Zend\ModuleManager\Feature\ControllerProviderInterface;
 
 class Module {
+//class Module implements BootstrapListenerInterface, ControllerProviderInterface {
 	public function getAutoloaderConfig() {
 		return array (
 				'Zend\Loader\ClassMapAutoloader' => array (	
@@ -63,7 +66,12 @@ class Module {
 	
 	// trick to overwrite login form zfcuser
 	public function onBootstrap($e) {
-		$events = $e->getApplication ()->getEventManager ()->getSharedManager ();
+		// set up json strategy TODO did not work
+// 		$eventManager = $e->getApplication()->getEventManager();
+// 		$eventManager->attach(
+// 			'render' , array($this, 'registerJsonStrategy'), 100
+// 		); 
+		$events = $e->getApplication()->getEventManager()->getSharedManager();
 		$events->attach ('ZfcUser\Form\Login', 'init', function ($e) {
 			$form = $e->getTarget ();
 			$pwelement = $form->get ('credential');
@@ -108,5 +116,23 @@ class Module {
 			$sbElement->setValue ( 'Passwort aendern' );
 		});
 	}
+	
+// 	public function getControllerConfig(){ TODO did not work
+// 		return array(
+// 			'invokables' => array(
+// 				'ehome-json' => 'Ehome\Controller',
+// 		));
+// 	}
+	
+// 	public function registerJsonStrategy($e){ TODO did not work
+// 		$controller = $e->getRouteMatch()->getParam('controller');
+// 		if (false === strpos($controller, 'json')){
+// 			return;
+// 		} 
+// 		$serviceManager = $e->getApplication()->getServiceManager();
+// 		$view = $serviceManager->get('Zend\View\View');
+// 		$jsonStrategy = $serviceManager->get('ViewJsonStrategy');
+// 		$view->getEventManager()->attach($jsonStrategy, 100);
+// 	}
 }
 ?>
