@@ -9,11 +9,17 @@ use Zend\View\Model\JsonModel;
 class JsonController extends AbstractActionController {
 
 	public function indexAction(){ // call: ehcserver.jochen-bauer.net/ehomejson
-		//Debug::dump("BP0");
-		$data = array(1 => 'Jochen Bauer');
-		return new JsonModel(array(
-			'data' => $data
-		));
+		// TODO Problem mit iOS-JSON-Verarbeitung
+		//$data = array('connection' => 'ok');
+		//return new JsonModel(array(
+		//	'data' => $data
+		//));
+		return new JsonModel(array('connection' => 'ok'));
 	}
+	
+	public function getDataAction(){
+		
+	}
+	
 }
 ?>
