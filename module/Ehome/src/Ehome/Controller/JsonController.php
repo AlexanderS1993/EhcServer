@@ -14,11 +14,7 @@ class JsonController extends AbstractActionController {
 		//return new JsonModel(array(
 		//	'data' => $data
 		//));
-		return new JsonModel(array('connection' => 'ok2'));
-	}
-	
-	public function getDataAction(){
-		
+		return new JsonModel(array('connection' => 'ok'));
 	}
 	
 }
