@@ -117,7 +117,7 @@ class IndexController extends AbstractActionController {
 		//}
 		
 		// scenario: submit button
-		$user = $this->zfcUserAuthentication ()->getIdentity ();
+		$user = $this->zfcUserAuthentication()->getIdentity();
 		$email = $user->getEmail();
 		$rooms = $this->getRoomTable()->fetchAll();
 		$events = $this->getEventTable()->fetchAll();
@@ -178,8 +178,8 @@ class IndexController extends AbstractActionController {
 			return $this->redirect ()->toRoute ( static::ROUTE_LOGIN );
 		}
 		$user = $this->zfcUserAuthentication ()->getIdentity ();
-		$email = $user->getEmail ();
-		$rooms = $this->getRoomTable ()->fetchAll();
+		$email = $user->getEmail();
+		$rooms = $this->getRoomTable()->fetchAll();
 		$events = $this->getEventTable()->fetchAll();
 		$lightoneBath = false;
 		$lighttwoBath = false;
@@ -189,20 +189,20 @@ class IndexController extends AbstractActionController {
 		$lighttwoLivingRoom = false;
 		$rooms->buffer();
 		foreach ($rooms as $room){
-			$id = $room->getId ();
+			$id = $room->getId();
 			if ($id == 3){
 				$lightoneBathValue = $room->getLightone ();
 				$lighttwoBathValue = $room->getLighttwo ();
-				if ($lightoneBathValue == 100) {
+				if ($lightoneBathValue == 100){
 					$lightoneBath = true;
 				}
-				if ($lighttwoBathValue == 100) {
+				if ($lighttwoBathValue == 100){
 					$lighttwoBath = true;
 				}
 			} else if ($id == 1) { // kitchen
-				$lightoneKitchenValue = $room->getLightone ();
-				$lighttwoKitchenValue = $room->getLighttwo ();
-				if ($lightoneKitchenValue == 100) {
+				$lightoneKitchenValue = $room->getLightone();
+				$lighttwoKitchenValue = $room->getLighttwo();
+				if ($lightoneKitchenValue == 100){
 					$lightoneKitchen = true;
 				}
 				if ($lighttwoKitchenValue == 100) {
