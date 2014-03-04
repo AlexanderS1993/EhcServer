@@ -175,6 +175,7 @@ class FtpUpdate {
 				"module/Ehome/view/ehome/index/index.phtml",
 				"module/Ehome/view/ehome/index/indexfunctional.phtml",
 				"module/Ehome/view/ehome/index/indexroom.phtml",
+				"module/Ehome/view/ehome/index/temp.phtml",
 				"module/Ehome/view/ehome/joba-user/login.phtml",
 				"module/Ehome/view/zfc-user/user/login.phtml",
 				"module/Ehome/autoload_classmap.php",
