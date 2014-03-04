@@ -43,18 +43,6 @@ class FtpConfig {
 // 		$this->dbUser = "";
 // 		$this->dbPass = "";
 		
-		// Produktivumgebung joba
-		$this->pathToServerRoot = "/"; 	// "" /projekte/dev/EhcServer
-		$this->pathToLocalRoot = "\\Users\\jobauer\\workspace\\EhcServer\\"; // ""
-		$this->ftpHost = "paradoxfeet.de";
-		$this->ftpPort = "21";
-		$this->ftpUser = "f0088187"; 		// f0088187 "w006a096";
-		$this->ftpPass = "xfz9sVUvRBJRZxSX"; // xfz9sVUvRBJRZxSX "0VUF53fuMn";
-		$this->dbHost = "localhost";
-		$this->dbName = "d0171593";
-		$this->dbUser = "d0171593";
-		$this->dbPass = "ehc";
-		
 		// Produktivumgebung ehome-center
 // 		$this->pathToServerRoot = "";
 // 		$this->ftpHost = "";
