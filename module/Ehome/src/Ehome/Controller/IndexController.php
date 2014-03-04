@@ -23,6 +23,15 @@ class IndexController extends AbstractActionController {
 	// DEVELOPMENT AREA
 	public function tempAction(){
 		
+		// turn light on connect to homematic demonstrator
+		$client = new Client();
+		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+		$uri = 'http://10.20.66.233:8083/fhem?XHR=1&cmd.hm_test_switch=set hm_test_switch toggle';
+		$client->setUri($uri);
+		$result = $client->send();
+		$body = $result->getBody();
+		//Debug::dump("DEBUG: " . $body);
+		//Debug::dump("BP0");
 		// Create new request and connect to Z-Wave demonstrator, TODO
 		//$client = new Client();
 		//$client->setAdapter('Zend\Http\Client\Adapter\Curl');
@@ -93,8 +102,8 @@ class IndexController extends AbstractActionController {
 		// 				'id' => $id,
 		// 				'form' => $form
 		// 		);
-		//return new ViewModel();
-		return $this->redirect()->toRoute('home');
+		return new ViewModel();
+		//return $this->redirect()->toRoute('home');
 	}
 	
 	public function indexAction(){
