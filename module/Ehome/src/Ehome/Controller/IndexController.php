@@ -23,6 +23,15 @@ class IndexController extends AbstractActionController {
 	// DEVELOPMENT AREA
 	public function tempAction(){
 		
+		$client = new Client();
+		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+		Debug::dump("BP7");
+		//$uri = 'http://10.20.66.22:8083/fhem?cmd.steckdose=set steckdose on & room=all';
+		$uri = 'http://10.20.66.22:8083/fhem?cmd.steckdose=set steckdose off & room=all';
+		$client->setUri($uri);
+		$result = $client->send();
+		$body = $result->getBody();
+		
 		// turn light on connect to homematic demonstrator
 // 		$client = new Client();
 // 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
