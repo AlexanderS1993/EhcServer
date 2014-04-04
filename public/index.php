@@ -5,6 +5,10 @@
  */
 chdir(dirname(__DIR__));
 
+// Set environment variable
+putenv('ZF2_PATH=/home/jay/workspacephp/EhcServer/vendor/zendframework/zendframework/library');
+putenv('APPLICATION_ENV=development');
+
 // Error reporting
 error_reporting(E_ALL);
 
