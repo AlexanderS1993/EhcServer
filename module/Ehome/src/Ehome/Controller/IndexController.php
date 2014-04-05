@@ -23,14 +23,18 @@ class IndexController extends AbstractActionController {
 	// DEVELOPMENT AREA
 	public function tempAction(){
 		
-		$client = new Client();
-		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-		Debug::dump("BP7");
-		//$uri = 'http://10.20.66.22:8083/fhem?cmd.steckdose=set steckdose on & room=all';
-		$uri = 'http://10.20.66.22:8083/fhem?cmd.steckdose=set steckdose off & room=all';
-		$client->setUri($uri);
-		$result = $client->send();
-		$body = $result->getBody();
+		// Weiterleiten zum Formular hier commentAction();
+		$this->redirect()->toRoute('home', array('action' => 'comment'));
+		
+		// Absetzen der URL fuer fhem
+// 		$client = new Client();
+// 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+// 		Debug::dump("BP7");
+// 		//$uri = 'http://10.20.66.22:8083/fhem?cmd.steckdose=set steckdose on & room=all';
+// 		$uri = 'http://10.20.66.22:8083/fhem?cmd.steckdose=set steckdose off & room=all';
+// 		$client->setUri($uri);
+// 		$result = $client->send();
+// 		$body = $result->getBody();
 		
 		// turn light on connect to homematic demonstrator
 // 		$client = new Client();
@@ -95,7 +99,7 @@ class IndexController extends AbstractActionController {
 		// 		}
 	
 		// 		$form = new RoomForm();
-		// 		// Bind: tut die Daten aus dem Modell in die Form und am Ende des Vorgangs wieder zur�ck
+		// 		// Bind: tut die Daten aus dem Modell in die Form und am Ende des Vorgangs wieder zurueck
 		// 		$form->bind($room);
 		// 		$form->get('submit')->setAttribute('value', 'Edit');
 		// 		$request = $this->getRequest();
@@ -253,6 +257,10 @@ class IndexController extends AbstractActionController {
 	
 	public function ehometestAction(){
 		return new ViewModel();
+	}
+	
+	public function commentAction(){
+		return $this->redirect()->toRoute('contact');
 	}
 	
 	public function togglelightoneAction(){

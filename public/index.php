@@ -5,6 +5,14 @@
  */
 chdir(dirname(__DIR__));
 
+// joba: APP_ROOT for ContactController
+define('APP_ROOT', realpath(__DIR__ . '/..'));
+
+// joba: add zf2 libs in /vendor/ZF2/library/Zend to include path
+//define ('APPLICATION_PATH', realpath (dirname (__FILE__) . '/../application/'));
+//$includePath = APPLICATION_PATH . '/../library' . PATH_SEPARATOR . get_include_path ();
+//set_include_path($includePath);
+
 // Set environment variable
 putenv('ZF2_PATH=/home/jay/workspacephp/EhcServer/vendor/zendframework/zendframework/library');
 putenv('APPLICATION_ENV=development');
