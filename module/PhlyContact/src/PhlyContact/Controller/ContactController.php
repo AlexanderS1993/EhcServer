@@ -119,13 +119,16 @@ class ContactController extends AbstractActionController
 		// SMTP-Versand
 		$mail = new \PHPMailer();
 		$mail->IsSMTP(); // set mailer to use SMTP
-		$mail->Host = "mail.paradoxfeet.de"; //
+		$config = $this->getServiceLocator()->get('Config');
+		$jobaGlobalOptions = $config['jobaGlobalOptions'];
+		$mail->Host = $jobaGlobalOptions['mailHost'];
 		$mail->SMTPAuth = true;
-		$mail->Username = 'xxx';
-		$mail->Password = 'xxx';
-		$mail->From = 'xxx'; // Absender
-		$mail->FromName = 'xxx';
-		$mail->AddAddress('xxx', 'yyy' ); // Empfaenger
+		$mail->Username = $jobaGlobalOptions['mailUser'];
+		$mail->Password = $jobaGlobalOptions['mailPass'];
+		$mail->From = $jobaGlobalOptions['mailFrom'];
+		$mail->FromName = $jobaGlobalOptions['mailFromName'];
+		$mail->AddAddress($jobaGlobalOptions['mailRec'], $jobaGlobalOptions['mailRecName']);
+		$mail->AddCC($jobaGlobalOptions['mailCc'], $jobaGlobalOptions['mailCcName'] );
 		$mail->Subject = $mailbetreff;
 		$mail->Body = $mailinhalt;
 		$mail->CharSet = "utf-8";
