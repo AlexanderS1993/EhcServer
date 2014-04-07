@@ -246,7 +246,11 @@ if ($lighttwoLivingRoom) {
 <div class='row'>
 	<div class='span4'>
 		<h2>Cockpit</h2>
-		<div style='float: left; padding-right: 16px;'><?php echo $this->gravatar($this->zfcUserIdentity()->getEmail()); ?>
+		<div style='float: left; padding-right: 16px;'><?php 
+			if (!$this->localNetwork){
+				echo $this->gravatar($this->zfcUserIdentity()->getEmail());
+			} 
+		?>
     </div>
 		<p>
     	Angemeldet als <?php echo $useremail; ?>

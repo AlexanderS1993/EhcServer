@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <?php echo $this->headTitle('MeinTitel'); ?>
+        <?php echo $this->headTitle('EHC Web App'); ?>
         <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
 
         <!-- Le styles -->
@@ -65,8 +65,12 @@
             </footer>
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>
-        <!-- Counter -->
-        <script type="text/javascript" src="http://fc.webmasterpro.de/counter.php?name=jochen1980_ehcwebapp"></script>
-		<noscript><div><img src="http://fc.webmasterpro.de/as_noscript.php?name=jochen1980_ehcwebapp" style="width:1px;height:1px;" alt="" /></div></noscript>
+        <?php 
+        if (!$this->localNetwork){
+			echo '<!-- Counter -->';
+			echo '<script type="text/javascript" src="http://fc.webmasterpro.de/counter.php?name=jochen1980_ehcwebapp"></script>';
+			echo '<noscript><div><img src="http://fc.webmasterpro.de/as_noscript.php?name=jochen1980_ehcwebapp" style="width:1px;height:1px;" alt="" /></div></noscript>';
+		}
+        ?>
     </body>
 </html>

@@ -60,8 +60,7 @@ class IndexController extends AbstractActionController {
 		
 		// create Log Message // TODO add exception handling
 		// $this->createMessage("Protokoll", "TestEvent getriggert.");
-	
-	
+		
 		// clear session and log out
 		//$session = new Container('session');
 		//$viewType = $session->viewType;
@@ -182,6 +181,9 @@ class IndexController extends AbstractActionController {
 			} else {
 			}
 		}
+		$config = $this->getServiceLocator()->get('Config');
+		$jobaGlobalOptions = $config['jobaGlobalOptions'];
+		$reduceToLocal = $jobaGlobalOptions['localNetwork'];
 		return new ViewModel ( array (
 				'rooms' => $rooms,
 				'events' => $events,
@@ -191,7 +193,8 @@ class IndexController extends AbstractActionController {
 				'lightoneKitchen' => $lightoneKitchen,
 				'lighttwoKitchen' => $lighttwoKitchen,
 				'lightoneLivingRoom' => $lightoneLivingRoom,
-				'lighttwoLivingRoom' => $lighttwoLivingRoom
+				'lighttwoLivingRoom' => $lighttwoLivingRoom,
+				'localNetwork' => $reduceToLocal
 		) );
 	}
 	

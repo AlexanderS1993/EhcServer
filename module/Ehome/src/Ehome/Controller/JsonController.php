@@ -16,11 +16,6 @@ class JsonController extends AbstractActionController {
 	public function indexAction(){ 
 		// call: ehcserver.jochen-bauer.net/ehomejson
 		// call: ehcserver.local/ehomejson
-		// TODO Problem mit iOS-JSON-Verarbeitung
-		//$data = array('connection' => 'ok');
-		//return new JsonModel(array(
-		//	'data' => $data
-		//));
 		return new JsonModel(array('connection' => 'ok'));
 	}
 	
@@ -36,10 +31,10 @@ class JsonController extends AbstractActionController {
 			$config = $this->getServiceLocator()->get('Config');
 			$jobaGlobalOptions = $config['jobaGlobalOptions'];
 			$ip = $jobaGlobalOptions['networkIp'];
-			//Debug::dump($ip);
 			if ($state == "100"){
 				$room->setLightone("0");
-				// call fhem url
+				$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose off\&room=Buero';
+				// call fhem url with zf2 curl
 				$client = new Client();
 				$client->setAdapter('Zend\Http\Client\Adapter\Curl');
 				$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose off&room=Buero';
@@ -49,7 +44,7 @@ class JsonController extends AbstractActionController {
 				$this->createMessage("Protokoll", "[App] Licht Nummer Eins im Raum '" . $room->getName() . "' ausgeschaltet.");
 			} else {
 				$room->setLightone("100");
- 				// call fhem url
+ 				// call fhem url with php curl
 				$client = new Client();
 				$client->setAdapter('Zend\Http\Client\Adapter\Curl');
 				$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose on&room=Buero';
