@@ -267,11 +267,29 @@ class IndexController extends AbstractActionController {
 		$roomId = (int) $this->params()->fromRoute('id', 0);
 		$room = $this->getRoomTable()->getRoom($roomId);
 		$state = $room->getLightone();
+		$config = $this->getServiceLocator()->get('Config');
+		$jobaGlobalOptions = $config['jobaGlobalOptions'];
+		$ip = $jobaGlobalOptions['networkIp'];
+		// http://10.20.64.26:8083
 		if ($state == "100"){
 			$room->setLightone("0");
+			// call fhem url
+			$client = new Client();
+			$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+			$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose off&room=Buero';
+			$client->setUri($uri);
+			$result = $client->send();
+			$body = $result->getBody();
 			$this->createMessage("Protokoll", "Licht Nummer Eins im Raum '" . $room->getName() . "' ausgeschaltet.");
 		} else {
 			$room->setLightone("100");
+			// call fhem url
+			$client = new Client();
+			$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+			$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose on&room=Buero';
+			$client->setUri($uri);
+			$result = $client->send();
+			$body = $result->getBody();
 			$this->createMessage("Protokoll", "Licht Nummer Eins im Raum '" . $room->getName() . "' eingeschaltet.");
 		}
 		$this->getRoomTable()->saveRoom($room);

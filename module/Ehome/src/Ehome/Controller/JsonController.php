@@ -13,7 +13,9 @@ class JsonController extends AbstractActionController {
 	protected $roomTable;
 	protected $userTable;
 	
-	public function indexAction(){ // call: ehcserver.jochen-bauer.net/ehomejson
+	public function indexAction(){ 
+		// call: ehcserver.jochen-bauer.net/ehomejson
+		// call: ehcserver.local/ehomejson
 		// TODO Problem mit iOS-JSON-Verarbeitung
 		//$data = array('connection' => 'ok');
 		//return new JsonModel(array(
@@ -31,11 +33,29 @@ class JsonController extends AbstractActionController {
 			$roomId = (int) $this->params()->fromRoute('id', 0);
 			$room = $this->getRoomTable()->getRoom($roomId);
 			$state = $room->getLightone();
+			$config = $this->getServiceLocator()->get('Config');
+			$jobaGlobalOptions = $config['jobaGlobalOptions'];
+			$ip = $jobaGlobalOptions['networkIp'];
+			//Debug::dump($ip);
 			if ($state == "100"){
 				$room->setLightone("0");
+				// call fhem url
+				$client = new Client();
+				$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+				$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose off&room=Buero';
+				$client->setUri($uri);
+				$result = $client->send();
+				$body = $result->getBody();
 				$this->createMessage("Protokoll", "[App] Licht Nummer Eins im Raum '" . $room->getName() . "' ausgeschaltet.");
 			} else {
 				$room->setLightone("100");
+ 				// call fhem url
+				$client = new Client();
+				$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+				$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose on&room=Buero';
+				$client->setUri($uri);
+				$result = $client->send();
+				$body = $result->getBody();
 				$this->createMessage("Protokoll", "[App] Licht Nummer Eins im Raum '" . $room->getName() . "' eingeschaltet.");
 			}
 			$this->getRoomTable()->saveRoom($room);
