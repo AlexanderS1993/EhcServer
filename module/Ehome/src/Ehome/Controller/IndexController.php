@@ -20,22 +20,27 @@ class IndexController extends AbstractActionController {
 	protected $roomTable;
 	const ROUTE_LOGIN = 'zfcuser/login';
 	
+	// ========================================================================================================
 	// DEVELOPMENT AREA
 	public function tempAction(){
 		
-		// Weiterleiten zum Formular hier commentAction();
-		$this->redirect()->toRoute('home', array('action' => 'comment'));
+		// TODO following use cases are working ... embed in webapp
+		// use case: forward to contact form
+		//$this->redirect()->toRoute('home', array('action' => 'comment'));
 		
-		// Absetzen der URL fuer fhem
-// 		$client = new Client();
-// 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-// 		Debug::dump("BP7");
-// 		//$uri = 'http://10.20.66.22:8083/fhem?cmd.steckdose=set steckdose on & room=all';
-// 		$uri = 'http://10.20.66.22:8083/fhem?cmd.steckdose=set steckdose off & room=all';
-// 		$client->setUri($uri);
-// 		$result = $client->send();
-// 		$body = $result->getBody();
+		// use case: turn switch on or off via fhem
+		$client = new Client();
+		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+		$config = $this->getServiceLocator()->get('config');
+		$ehcGlobalOptions = $config['ehcGlobalOptions'];
+		$ip = $ehcGlobalOptions['serverIp'];
+		//$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set Ventilator on & room=Infotainment';
+		$uri = 'http://131.188.209.50:8083/fhem?cmd.steckdose=set Ventilator off & room=Infotainment';
+		$client->setUri($uri);
+		$result = $client->send();
+		$body = $result->getBody();
 		
+		// TODO following use cases do not work!!!
 		// turn light on connect to homematic demonstrator
 // 		$client = new Client();
 // 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
@@ -117,6 +122,7 @@ class IndexController extends AbstractActionController {
 		return new ViewModel();
 		//return $this->redirect()->toRoute('home');
 	}
+	// ======================================================================================================================
 	
 	public function indexAction(){
 		if (! $this->zfcUserAuthentication ()->hasIdentity ()) { // check for valid session

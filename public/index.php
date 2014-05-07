@@ -9,9 +9,9 @@ chdir(dirname(__DIR__));
 define('APP_ROOT', realpath(__DIR__ . '/..'));
 
 // joba: add zf2 libs in /vendor/ZF2/library/Zend to include path
-//define ('APPLICATION_PATH', realpath (dirname (__FILE__) . '/../application/'));
-//$includePath = APPLICATION_PATH . '/../library' . PATH_SEPARATOR . get_include_path ();
-//set_include_path($includePath);
+define ('APPLICATION_PATH', realpath (dirname (__FILE__) . '/../application/'));
+$includePath = APPLICATION_PATH . '/../library' . PATH_SEPARATOR . get_include_path ();
+set_include_path($includePath);
 
 // Set environment variable
 putenv('ZF2_PATH=/home/jay/workspacephp/EhcServer/vendor/zendframework/zendframework/library');
@@ -30,3 +30,5 @@ require 'init_autoloader.php';
 
 // Run the application!
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();
+
+//phpinfo();

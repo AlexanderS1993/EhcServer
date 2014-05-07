@@ -18,16 +18,14 @@ foreach($events as $event){
 }
 ?>
 <!-- DEBUGGING AREA -->
-
 <div class='row'>
         <div class='span12'>
+        <!-- 			
                 <h2>Debugging Area</h2>
                 <p>
-					<a class="btn" href="<?php 
-						echo $this->url('home', array('action' => 'temp')); 
-				?>">TempAction</a>
+					<a class="btn" href="<?php echo $this->url('home', array('action' => 'temp')); ?>">TempAction</a>
 				</p>
-<!--
+
 <script type="text/javascript">
 function turnLightOn(){
 	var url = 'http://10.11.12.1:8083/ZWaveAPI/Run/devices\[5\].instances\[0\].Basic.Set\(255\)';
