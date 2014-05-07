@@ -22,23 +22,37 @@ class IndexController extends AbstractActionController {
 	
 	// ========================================================================================================
 	// DEVELOPMENT AREA
-	public function tempAction(){
+	public function tempAction() {
+		
+		// TODO current use case under development:
+		// read state of sensor, perl-shell: 'list TemperaturUndLuftfeuchtigkeit temperature' liefert ein Array mit Gradzahl
+		$client = new Client ();
+		$client->setAdapter ( 'Zend\Http\Client\Adapter\Curl' );
+		$config = $this->getServiceLocator ()->get ( 'config' );
+		$ehcGlobalOptions = $config ['ehcGlobalOptions'];
+		$ip = $ehcGlobalOptions['serverIp'];
+		$uri = 'http://' . $ip . ':8083/fhem?cmd.listtemp={FW_devState%28%22TemperaturUndLuftfeuchtigkeit%22,%22%22%29}&XHR=1';
+		$client->setUri($uri);
+		$result = $client->send();
+		$body = $result->getBody();
+		Debug::dump("DEBUG-URI: " . $uri);
+		Debug::dump("DEBUG-BODY: " . $body);
+		// works: result body <div id="TemperaturUndLuftfeuchtigkeit"  class="col2">T: 26.5 H: 36</div>
 		
 		// TODO following use cases are working ... embed in webapp
 		// use case: forward to contact form
 		//$this->redirect()->toRoute('home', array('action' => 'comment'));
-		
 		// use case: turn switch on or off via fhem
-		$client = new Client();
-		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-		$config = $this->getServiceLocator()->get('config');
-		$ehcGlobalOptions = $config['ehcGlobalOptions'];
-		$ip = $ehcGlobalOptions['serverIp'];
-		//$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set Ventilator on & room=Infotainment';
-		$uri = 'http://131.188.209.50:8083/fhem?cmd.steckdose=set Ventilator off & room=Infotainment';
-		$client->setUri($uri);
-		$result = $client->send();
-		$body = $result->getBody();
+// 		$client = new Client();
+// 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+// 		$config = $this->getServiceLocator()->get('config');
+// 		$ehcGlobalOptions = $config['ehcGlobalOptions'];
+// 		$ip = $ehcGlobalOptions['serverIp'];
+// 		//$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set Ventilator on & room=Infotainment';
+// 		$uri = 'http://131.188.209.50:8083/fhem?cmd.steckdose=set Ventilator off & room=Infotainment';
+// 		$client->setUri($uri);
+// 		$result = $client->send();
+// 		$body = $result->getBody();
 		
 		// TODO following use cases do not work!!!
 		// turn light on connect to homematic demonstrator
