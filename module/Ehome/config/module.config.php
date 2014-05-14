@@ -3,7 +3,10 @@
 namespace Ehome;
 
 return array (
-		'ehomeconfig' => array(
+		'ehomeConfig' => array(
+			'residentUser' => 'Rosemarie Schmidt',
+			'residentStreet' => 'Fürther Straße 246b',
+			'residentCity' => ' 90429 Nürnberg',
 			'floorplan' => 'floorplan.jpg', // aktuell in /public/img/ 
 		),
 		'controllers' => array (

@@ -24,16 +24,28 @@ class IndexController extends AbstractActionController {
 	// DEVELOPMENT AREA
 	public function tempAction() { // call: http://ehcserver.local/temp
 		
-		// TODO current ulse case under development:
-		
-		// use case: delete all messages
-		
+		// TODO current use case under development:
 		
 		// use case: if temperature is more than 22 degrees start ventilator
 		// ...
 		
 		
 		// TODO following use cases are working ... embed in webapp
+		// use case: delete all non-health-messages
+		// 		$events = $this->getEventTable()->fetchAll();
+		// 		$idsToDelete = array();
+		// 		foreach($events as $event){
+		// 			$id = $event->getId();
+		// 			$type = $event->getType();
+		// 			if ($type != "health"){
+		// 				$idsToDelete[] = $id;
+		// 			}
+		// 		}
+		// 		foreach($idsToDelete as $idToDelete){
+		// 			$this->getEventTable()->deleteEvent($idToDelete);
+		// 		}
+		// 		$this->createMessage("Protokoll", "Alle Systemnachrichten wurden gelöscht.");
+		// 		return $this->redirect()->toRoute('home');
 		// call fhem url
 // 		$client = new Client();
 // 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
@@ -148,7 +160,7 @@ class IndexController extends AbstractActionController {
 		// 				'id' => $id,
 		// 				'form' => $form
 		// 		);
-		return new ViewModel();
+		//return new ViewModel();
 		//return $this->redirect()->toRoute('home');
 	}
 	// ======================================================================================================================
@@ -172,8 +184,8 @@ class IndexController extends AbstractActionController {
 		foreach ($rooms as $room){
 			$id = $room->getId ();
 			if ($id == 3){
-				$lightoneBathValue = $room->getLightone ();
-				$lighttwoBathValue = $room->getLighttwo ();
+				$lightoneBathValue = $room->getLightone();
+				$lighttwoBathValue = $room->getLighttwo();
 				if ($lightoneBathValue == 100) {
 					$lightoneBath = true;
 				}
@@ -181,8 +193,8 @@ class IndexController extends AbstractActionController {
 					$lighttwoBath = true;
 				}
 			} else if ($id == 1) {
-				$lightoneKitchenValue = $room->getLightone ();
-				$lighttwoKitchenValue = $room->getLighttwo ();
+				$lightoneKitchenValue = $room->getLightone();
+				$lighttwoKitchenValue = $room->getLighttwo();
 				if ($lightoneKitchenValue == 100) {
 					$lightoneKitchen = true;
 				}
@@ -204,6 +216,8 @@ class IndexController extends AbstractActionController {
 		$config = $this->getServiceLocator()->get('Config');
 		$jobaGlobalOptions = $config['jobaGlobalOptions'];
 		$reduceToLocal = $jobaGlobalOptions['localNetwork'];
+		$ehomeConfig = $config['ehomeConfig'];
+		$floorplanHeader = $ehomeConfig['residentUser'] . ", " . $ehomeConfig['residentStreet'] . ", " .  $ehomeConfig['residentCity'];
 		return new ViewModel ( array (
 				'rooms' => $rooms,
 				'events' => $events,
@@ -214,7 +228,8 @@ class IndexController extends AbstractActionController {
 				'lighttwoKitchen' => $lighttwoKitchen,
 				'lightoneLivingRoom' => $lightoneLivingRoom,
 				'lighttwoLivingRoom' => $lighttwoLivingRoom,
-				'localNetwork' => $reduceToLocal
+				'localNetwork' => $reduceToLocal,
+				'floorplanHeader' => $floorplanHeader
 		) );
 	}
 	

@@ -6,6 +6,10 @@ Einleitung
 Die EhcServer-Anwendung dient als Abstraktionsschicht zur Hausautomatisierung.
 Als Webframework wird das Zend Framework in der Version 2 eingesetzt.
 
+Konfiguration
+--------------
+Einige Einstellungen befinden sich in den Dateien der config-Verzeichnisse des ZF2.
+
 Datenbank
 ---------
 Es existieren JobaEvents und Rooms. 
