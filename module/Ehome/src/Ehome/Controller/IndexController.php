@@ -22,10 +22,15 @@ class IndexController extends AbstractActionController {
 	
 	// ========================================================================================================
 	// DEVELOPMENT AREA
-	public function tempAction() {
+	public function tempAction() { // call: http://ehcserver.local/temp
 		
 		// TODO current ulse case under development:
-		// ....
+		
+		// use case: delete all messages
+		
+		
+		// use case: if temperature is more than 22 degrees start ventilator
+		// ...
 		
 		
 		// TODO following use cases are working ... embed in webapp
@@ -152,21 +157,6 @@ class IndexController extends AbstractActionController {
 		if (! $this->zfcUserAuthentication ()->hasIdentity ()) { // check for valid session
 			return $this->redirect ()->toRoute ( static::ROUTE_LOGIN );
 		}
-		// pick corresponding view 
-		//$session = new Container("session");
-		//$viewType = $session->viewType;
-		//if ($viewType == "functional"){
-		//	return $this->redirect()->toRoute('home', array(
-		//		'action' => 'indexfunctional' 
-		//	));
-		//} else if ($viewType == "room"){
-		//	return $this->redirect ()->toRoute('home', array(
-		//		'action' => 'indexroom'
-		//	));
-		//} else {
-		//	throw new \Exception("Problem with the session settings.");
-		//}
-		
 		// scenario: submit button
 		$user = $this->zfcUserAuthentication()->getIdentity();
 		$email = $user->getEmail();
@@ -190,7 +180,7 @@ class IndexController extends AbstractActionController {
 				if ($lighttwoBathValue == 100) {
 					$lighttwoBath = true;
 				}
-			} else if ($id == 1) { // kitchen
+			} else if ($id == 1) {
 				$lightoneKitchenValue = $room->getLightone ();
 				$lighttwoKitchenValue = $room->getLighttwo ();
 				if ($lightoneKitchenValue == 100) {
@@ -228,66 +218,6 @@ class IndexController extends AbstractActionController {
 		) );
 	}
 	
-	public function indexroomAction(){
-		if (! $this->zfcUserAuthentication ()->hasIdentity ()) { // check for valid session
-			return $this->redirect ()->toRoute ( static::ROUTE_LOGIN );
-		}
-		$user = $this->zfcUserAuthentication ()->getIdentity ();
-		$email = $user->getEmail();
-		$rooms = $this->getRoomTable()->fetchAll();
-		$events = $this->getEventTable()->fetchAll();
-		$lightoneBath = false;
-		$lighttwoBath = false;
-		$lightoneKitchen = false;
-		$lighttwoKitchen = false;
-		$lightoneLivingRoom = false;
-		$lighttwoLivingRoom = false;
-		$rooms->buffer();
-		foreach ($rooms as $room){
-			$id = $room->getId();
-			if ($id == 3){
-				$lightoneBathValue = $room->getLightone ();
-				$lighttwoBathValue = $room->getLighttwo ();
-				if ($lightoneBathValue == 100){
-					$lightoneBath = true;
-				}
-				if ($lighttwoBathValue == 100){
-					$lighttwoBath = true;
-				}
-			} else if ($id == 1) { // kitchen
-				$lightoneKitchenValue = $room->getLightone();
-				$lighttwoKitchenValue = $room->getLighttwo();
-				if ($lightoneKitchenValue == 100){
-					$lightoneKitchen = true;
-				}
-				if ($lighttwoKitchenValue == 100) {
-					$lighttwoKitchen = true;
-				}
-			} else if ($id == 2) {
-				$lightoneLivingRoomValue = $room->getLightone();
-				$lighttwoLivingRoomValue = $room->getLighttwo();
-				if ($lightoneLivingRoomValue == 100) {
-					$lightoneLivingRoom = true;
-				}
-				if ($lighttwoLivingRoomValue == 100) {
-					$lighttwoLivingRoom = true;
-				}
-			} else {
-			}
-		}
-		return new ViewModel ( array (
-				'rooms' => $rooms,
-				'events' => $events,
-				'useremail' => $email,
-				'lightoneBath' => $lightoneBath,
-				'lighttwoBath' => $lighttwoBath,
-				'lightoneKitchen' => $lightoneKitchen,
-				'lighttwoKitchen' => $lighttwoKitchen,
-				'lightoneLivingRoom' => $lightoneLivingRoom,
-				'lighttwoLivingRoom' => $lighttwoLivingRoom
-		) );
-	}
-	
 	public function ehometestAction(){
 		return new ViewModel();
 	}
@@ -303,7 +233,6 @@ class IndexController extends AbstractActionController {
 		$config = $this->getServiceLocator()->get('Config');
 		$jobaGlobalOptions = $config['jobaGlobalOptions'];
 		$ip = $jobaGlobalOptions['networkIp'];
-		// http://10.20.64.26:8083
 		if ($state == "100"){
 			$room->setLightone("0");
 			// call fhem url
@@ -518,65 +447,5 @@ class IndexController extends AbstractActionController {
 		$message->setDone(0);
 		$this->getEventTable()->saveEvent($message);
 	}
-	
-	// 	public function indexfunctionalAction(){ // deprecated!
-	// 		if (! $this->zfcUserAuthentication ()->hasIdentity ()) { // check for valid session
-	// 			return $this->redirect()->toRoute(static::ROUTE_LOGIN);
-	// 		}
-	// 		$user = $this->zfcUserAuthentication()->getIdentity();
-	// 		$email = $user->getEmail();
-	// 		$events = $this->getEventTable()->fetchAll();
-	// 		$rooms = $this->getRoomTable()->fetchAll();
-	// 		$lightoneBath = false;
-	// 		$lighttwoBath = false;
-	// 		$lightoneKitchen = false;
-	// 		$lighttwoKitchen = false;
-	// 		$lightoneLivingRoom = false;
-	// 		$lighttwoLivingRoom = false;
-	// 		$rooms->buffer();
-	// 		foreach ($rooms as $room){
-	// 			$id = $room->getId ();
-	// 			if ($id == 3){
-	// 				$lightoneBathValue = $room->getLightone();
-	// 				$lighttwoBathValue = $room->getLighttwo();
-	// 				if ($lightoneBathValue == 100){
-	// 					$lightoneBath = true;
-	// 				}
-	// 				if ($lighttwoBathValue == 100){
-	// 					$lighttwoBath = true;
-	// 				}
-	// 			} else if ($id == 1){ // kitchen
-	// 				$lightoneKitchenValue = $room->getLightone();
-	// 				$lighttwoKitchenValue = $room->getLighttwo();
-	// 				if ($lightoneKitchenValue == 100){
-	// 					$lightoneKitchen = true;
-	// 				}
-	// 				if ($lighttwoKitchenValue == 100){
-	// 					$lighttwoKitchen = true;
-	// 				}
-	// 			} else if ($id == 2) {
-	// 				$lightoneLivingRoomValue = $room->getLightone();
-	// 				$lighttwoLivingRoomValue = $room->getLighttwo();
-	// 				if ($lightoneLivingRoomValue == 100){
-	// 					$lightoneLivingRoom = true;
-	// 				}
-	// 				if ($lighttwoLivingRoomValue == 100){
-	// 					$lighttwoLivingRoom = true;
-	// 				}
-	// 			} else {
-	// 			}
-	// 		}
-	// 		return new ViewModel ( array (
-	// 				'rooms' => $rooms,
-	// 				'events' => $events,
-	// 				'useremail' => $email,
-	// 				'lightoneBath' => $lightoneBath,
-	// 				'lighttwoBath' => $lighttwoBath,
-	// 				'lightoneKitchen' => $lightoneKitchen,
-	// 				'lighttwoKitchen' => $lighttwoKitchen,
-	// 				'lightoneLivingRoom' => $lightoneLivingRoom,
-	// 				'lighttwoLivingRoom' => $lighttwoLivingRoom,
-	// 		) );
-	// 	}
 }
 ?>

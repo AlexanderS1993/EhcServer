@@ -8,7 +8,7 @@ class Room {
 	private $name;
 	private $humidity;
 	private $temperature;
-	private $lightone; // value from 0 to 100 percent
+	private $lightone; 		// value from 0 to 100 percent
 	private $lighttwo;
 	private $window;
 	private $door;

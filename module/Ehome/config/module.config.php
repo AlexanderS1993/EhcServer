@@ -3,6 +3,9 @@
 namespace Ehome;
 
 return array (
+		'ehomeconfig' => array(
+			'floorplan' => 'floorplan.jpg', // aktuell in /public/img/ 
+		),
 		'controllers' => array (
 				'invokables' => array (
 						'Ehome\Controller\Index' => 'Ehome\Controller\IndexController',
