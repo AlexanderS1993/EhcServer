@@ -44,7 +44,7 @@ return array (
 						'ehomejson' => array(
 								'type' => 'Zend\Mvc\Router\Http\Segment',
 								'options' => array(
-										'route'    => '/ehomejson[/:action][/:id]',
+										'route'    => '/ehomejson[/:action][/:slugA][/:slugB][/:slugC][/:slugD]',
 										'constraints' => array (
 												'id' => '[0-9-_]*'
 										),

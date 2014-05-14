@@ -13,9 +13,28 @@ class JsonController extends AbstractActionController {
 	protected $roomTable;
 	protected $userTable;
 	
+	// ========================================================================================================
+	// DEVELOPMENT AREA Webapp
+	public function tempAction(){ // call ehcserver.local/ehomejson/temp/user/pass/action/param
+		// use case under development 
+		// use case authenticate and store params in url - login in by external app
+		$params = $this->params()->fromRoute();
+		var_dump($params);
+		$user = $this->params()->fromRoute('slugA');
+		$pass = $this->params()->fromRoute('slugB');
+		$res = $this->authenticate($user, $pass);
+		if ($res){
+			$action = $this->params()->fromRoute('slugC');
+			return new JsonModel(array('connection' => 'ok'));
+		} else {
+			return new JsonModel(array('connection' => 'false'));	
+		}
+	}
+	// ======================================================================================================================
+	
+	
+	
 	public function indexAction(){ 
-		// call: ehcserver.jochen-bauer.net/ehomejson
-		// call: ehcserver.local/ehomejson
 		return new JsonModel(array('connection' => 'ok'));
 	}
 	
@@ -25,7 +44,7 @@ class JsonController extends AbstractActionController {
 		$password = "";
 		if ($this->authenticate($username, $password)){
 			// /ehomejson/togglelightone/1
-			$roomId = (int) $this->params()->fromRoute('id', 0);
+			$roomId = (int) $this->params()->fromRoute('slugA', 0);
 			$room = $this->getRoomTable()->getRoom($roomId);
 			$state = $room->getLightone();
 			$config = $this->getServiceLocator()->get('Config');
@@ -87,8 +106,14 @@ class JsonController extends AbstractActionController {
 	}
 	
 	private function authenticate($username, $password){
-		// TODO 
-		return true;
+		// TODO das sollte dann aehnlich eines Developer-Keys erfolgen
+		$user = "jsonapiuser";
+		$pass = "jsonapipass";
+		if ($username == $user && $password == $pass){
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 ?>

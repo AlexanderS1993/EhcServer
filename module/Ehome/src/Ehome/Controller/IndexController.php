@@ -21,10 +21,13 @@ class IndexController extends AbstractActionController {
 	const ROUTE_LOGIN = 'zfcuser/login';
 	
 	// ========================================================================================================
-	// DEVELOPMENT AREA
+	// DEVELOPMENT AREA Webapp
 	public function tempAction() { // call: http://ehcserver.local/temp
 		
 		// TODO current use case under development:
+		
+		// use case: fetch Jawbone Up data
+		// 
 		
 		// use case: if temperature is more than 22 degrees start ventilator
 		// ...
