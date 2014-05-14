@@ -15,4 +15,4 @@ MVC
 ---
 JobaEvent repraesentiert Mitteilungen. Das Attribut type regelt, welche Art die
 Mitteilung ist. Im index-View werden die Nachrichten gemaess der Typen in Listen 
-gebuendelt.
+gebuendelt. Aktuell existieren Log-Nachrichten, Gesundheitsnachrichten und Warnungen.
