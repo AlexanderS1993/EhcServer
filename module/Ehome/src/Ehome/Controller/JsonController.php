@@ -19,7 +19,7 @@ class JsonController extends AbstractActionController {
 		// use case under development 
 		// use case authenticate and store params in url - login in by external app
 		$params = $this->params()->fromRoute();
-		var_dump($params);
+		//var_dump($params);
 		$user = $this->params()->fromRoute('slugA');
 		$pass = $this->params()->fromRoute('slugB');
 		$res = $this->authenticate($user, $pass);
@@ -106,8 +106,8 @@ class JsonController extends AbstractActionController {
 	}
 	
 	private function authenticate($username, $password){
-		$user = "jsonapiuser";
-		$pass = "jsonapipass";
+		$user = "xxx";
+		$pass = "yyy";
 		if ($username == $user && $password == $pass){
 			return true;
 		} else {

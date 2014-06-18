@@ -40,6 +40,9 @@ class IndexController extends AbstractActionController {
 		$body = $result->getBody();
 		Debug::dump("DEBUG: " . $body);
 		
+		// use case: fetch CO2-data
+		// ...
+		
 		// use case: fetch Jawbone Up data
 		// 
 		
