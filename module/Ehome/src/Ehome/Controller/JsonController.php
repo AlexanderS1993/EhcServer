@@ -34,7 +34,7 @@ class JsonController extends AbstractActionController {
 	
 	
 	
-	public function indexAction(){ 
+	public function indexAction(){ // call .../ehomejson/user/pass/
 		return new JsonModel(array('connection' => 'ok'));
 	}
 	
@@ -106,7 +106,6 @@ class JsonController extends AbstractActionController {
 	}
 	
 	private function authenticate($username, $password){
-		// TODO das sollte dann aehnlich eines Developer-Keys erfolgen
 		$user = "jsonapiuser";
 		$pass = "jsonapipass";
 		if ($username == $user && $password == $pass){

@@ -25,6 +25,20 @@ class IndexController extends AbstractActionController {
 	public function tempAction() { // call: http://ehcserver.local/temp
 		
 		// TODO current use case under development:
+		// use case: trigger smart switch
+		$config = $this->getServiceLocator()->get('config');
+		$ehcGlobalOptions = $config['ehcGlobalOptions'];
+		$ip = $ehcGlobalOptions['serverIp'];
+		$uri = 'http://' . $ip . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+		//$uri = 'http://192.168.1.1:80/index.htm';
+		//$uri = 'http://www.google.de';
+		Debug::dump("DEBUG: " . $uri);
+		$client = new Client();
+		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+		$client->setUri($uri);
+		$result = $client->send();
+		$body = $result->getBody();
+		Debug::dump("DEBUG: " . $body);
 		
 		// use case: fetch Jawbone Up data
 		// 
