@@ -22,7 +22,7 @@ return array(
     ),
 	'db' => array(
 		'driver'    => 'pdo',
-		'dsn'       => 'mysql:dbname=xxx;host=localhost',
+		'dsn'       => 'mysql:dbname=ehcserver_ehome;host=localhost',
 		'username'  => 'xxx',
 		'password'  => 'xxx',
 		'driver_options' => array(

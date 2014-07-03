@@ -25,3 +25,21 @@ Philosophie und Strategie
 Der master-Branch repraesentiert die generische Version. Um Erfahrungswerte zu sammeln,
 existieren pro Instanz einer intelligenten Wohnung eigene Branches. Pro Instanz wird 
 eine eigene Datenbank angelegt.
+
+Hilfreiche Befehle
+------------------
+Anmelden am Datenbankserver: mysql -u [user] -p [pass]
+Datenbanken anzeigen: show databases;
+Datenbank anwaehlen: use [database];
+Datenbank kopieren in shell: mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -p[password] db2 
+Tabellen anzeigen: show tables;
+Tabelleneintraege anzeigen: select * from [table];
+
+Anleitung zum Anpassen an eine neue Umgebung
+--------------------------------------------
+Datenbank kopieren in neuen Namen;
+Neuen Branch anlegen;
+Netzwerkverbindungen zu Router und LAN/Internet pruefen;
+Datenbank mit neuen Raeumen bestuecken;
+Raumeigenschaften definieren bzw. ueberpruefen;
+Floorplan anpassen oder ausblenden;
