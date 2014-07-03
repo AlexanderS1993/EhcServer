@@ -4,7 +4,7 @@ EhcServer
 Einleitung
 ----------
 Die EhcServer-Anwendung dient als Abstraktionsschicht zur Hausautomatisierung.
-Als Webframework wird das Zend Framework in der Version 2 eingesetzt.
+Als Webframework wird das Zend Framework in der Version 2.x eingesetzt.
 
 Konfiguration
 --------------
