@@ -22,23 +22,32 @@ class IndexController extends AbstractActionController {
 	
 	// ========================================================================================================
 	// DEVELOPMENT AREA Webapp
-	public function tempAction() { // call: http://ehcserver.local/temp
+	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
 		
 		// TODO current use case under development:
-		// use case: trigger smart switch
-		$config = $this->getServiceLocator()->get('config');
-		$ehcGlobalOptions = $config['ehcGlobalOptions'];
-		$ip = $ehcGlobalOptions['serverIp'];
-		$uri = 'http://' . $ip . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
-		//$uri = 'http://192.168.1.1:80/index.htm';
-		//$uri = 'http://www.google.de';
-		Debug::dump("DEBUG: " . $uri);
-		$client = new Client();
-		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-		$client->setUri($uri);
-		$result = $client->send();
-		$body = $result->getBody();
-		Debug::dump("DEBUG: " . $body);
+		// trigger action in a more generic way
+		if (! $this->zfcUserAuthentication()->hasIdentity()) { // check for valid session
+			return $this->redirect()->toRoute(static::ROUTE_LOGIN);
+		}
+		$actionId = $this->params()->fromRoute('id');
+		// Funktionsmapping  ...
+		// 1 = turn switch in room one from 0 to 1; ... change switch to actorA
+		// 2 = turn switch in room two from 1 to 0;
+		switch ($actionId){
+    	case 0:
+        	Debug::dump("BP 0");
+        	break;
+    	case 1:
+        	Debug::dump("BP 1");
+        	break;
+    	case 2:
+        	Debug::dump("BP 2");
+        	break;
+    	default:
+    		Debug::dump("BP X");
+    		break;
+		}
+		
 		
 		// use case: fetch CO2-data
 		// ...
@@ -51,6 +60,18 @@ class IndexController extends AbstractActionController {
 		
 		
 		// TODO following use cases are working ... embed in webapp
+		// use case: trigger smart switch - works
+		// 		$config = $this->getServiceLocator()->get('config');
+		// 		$ehcGlobalOptions = $config['ehcGlobalOptions'];
+		// 		$ip = $ehcGlobalOptions['serverIp'];
+		// 		$uri = 'http://' . $ip . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+		// 		Debug::dump("DEBUG: " . $uri);
+		// 		$client = new Client();
+		// 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+		// 		$client->setUri($uri);
+		// 		$result = $client->send();
+		// 		$body = $result->getBody();
+		// 		Debug::dump("DEBUG: " . $body);
 		// use case: delete all non-health-messages
 		// 		$events = $this->getEventTable()->fetchAll();
 		// 		$idsToDelete = array();
@@ -180,7 +201,7 @@ class IndexController extends AbstractActionController {
 		// 				'id' => $id,
 		// 				'form' => $form
 		// 		);
-		//return new ViewModel();
+		return new ViewModel();
 		//return $this->redirect()->toRoute('home');
 	}
 	// ======================================================================================================================
