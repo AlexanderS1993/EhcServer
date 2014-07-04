@@ -17,6 +17,7 @@ class RoomTable {
 	}
 	
 	public function getRoom($id){
+		//var_dump($id);
 		$id = (int) $id;
 		$rowset = $this->tableGateway->select( array(
 				'id' => $id 
@@ -33,10 +34,11 @@ class RoomTable {
 				'name' => $room->getName(),
 				'humidity' => $room->getHumidity(),
 				'temperature' => $room->getTemperature(),
-				'lightone' => $room->getLightOne(),
-				'lighttwo' => $room->getLightTwo(),
-				'window' => $room->getWindow(),
-				'door' => $room->getDoor(),
+				'switch' => $room->getLightOne(),
+// 				'lightone' => $room->getLightOne(),
+// 				'lighttwo' => $room->getLightTwo(),
+// 				'window' => $room->getWindow(),
+// 				'door' => $room->getDoor(),
 		);
 		$id = (int) $room->getId();
 		if ($id == 0) {

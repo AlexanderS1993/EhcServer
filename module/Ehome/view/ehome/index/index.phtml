@@ -40,10 +40,18 @@ foreach($events as $event){
 <div class="hero-unit">
 	<h1><?php echo sprintf("Willkommen!", '<span class="zf-green">', '</span>') ?></h1>
 	<p><?php echo $floorplanHeader; ?></p>
-	<p>
+	<p <?php
+			if(!$showFloorplan){
+				echo 'style="display:none"';
+			}
+			?>>
 		[<a class="show_hide" href="#" rel="#container">+/-</a>]
 	</p>
-	<div id="container">
+	<div id="container" <?php
+			if(!$showFloorplan){
+				echo 'style="display:none"';
+			}
+			?>>
 		<div id="background">
 			<img alt="Floorplan"
 				src='<?php echo $this->basePath();?>/img/floorplan.jpg'>
@@ -191,61 +199,52 @@ echo "</ul>"
 					<th>Name</th>
 					<th>Luftfeuchtigkeit</th>
 					<th>Temperatur</th>
+					<th>Schalter</th><!-- TODO -->
+					<!-- 
 					<th>Licht Eins</th>
 					<th>Licht Zwei</th>
 					<th>Fenster</th>
 					<th>Türe</th>
+					-->
 					<th>Aktion</th>
 				</tr>
 <?php foreach($this->rooms as $room){
+		//var_dump($room);
 		echo "<tr>";
         //echo "<td>" . $room->getId() . "</td>";
         echo "<td>" . $room->getName() . "</td>";
         echo "<td style='text-align: right;'>" . $room->getHumidity() . "</td>";
         echo "<td style='text-align: right;'>" . $room->getTemperature() . "</td>";
-        if ($room->getLightone() == 100){
+     	if ($room->getSwitch() == 100){
         	echo "<td style='text-align: right;'>";
         	echo "<span style='color:orange;'>AN </span> ";
-        	echo "<a href='" . $this->url('home', array('action' => 'togglelightone' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
+        	$roomId = $room->getId();
+        	$isRelevant = false;
+        	$configActions = $ehomeConfig['action'];
+        	var_dump($configActions);
+//         	foreach (){
+
+// 			}
+        	echo "<a href='" . $this->url('home', array('action' => 'temp' , 'id' => 2)) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
 			echo "</td>";
-        } else {
-        	echo "<td style='text-align: right;'>";
-        	echo "<span style='color:green;'>AUS</span> ";
-        	echo "<a href='" . $this->url('home', array('action' => 'togglelightone' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
-        	echo "</td>";
-        }
-        if ($room->getLighttwo() == 100){
-        	echo "<td style='text-align: right;'>";
-        	echo "<span style='color:orange;'>AN</span> ";
-        	echo "<a href='" . $this->url('home', array('action' => 'togglelighttwo' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
+        } else if ($room->getSwitch() == 0){
+			$formActionId = 0;
+			$configActions = $ehomeConfig['action'];
+			//var_dump($configActions); // TODO!
+			foreach($configActions as $configAction){
+				$actionId = $configAction['id'];
+				$actionRoomId = $configAction['roomId'];
+				if ($room->getId() == $actionRoomId){
+					// match - place action id in form
+					$formActionId = $actionId;
+				} 
+			}
+			echo "<td style='text-align: right;'>";
+			echo "<span style='color:green;'>AUS</span> ";
+			echo "<a href='" . $this->url('home', array('action' => 'temp' , 'id' => $formActionId)) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
 			echo "</td>";
-        } else {
-        	echo "<td style='text-align: right;'>";
-        	echo "<span style='color:green;'>AUS</span> ";
-        	echo "<a href='" . $this->url('home', array('action' => 'togglelighttwo' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
-			echo "</td>";
-        }
-		if ($room->getWindow() == 1){
-        	echo "<td style='text-align: right;'>";
-        	echo "<span style='color:orange;'>AUF</span> ";
-        	echo "<a href='" . $this->url('home', array('action' => 'togglewindow' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
-			echo "</td>";
-        } else {
-        	echo "<td style='text-align: right;'>";
-        	echo "<span style='color:green;'>ZU</span> ";
-        	echo "<a href='" . $this->url('home', array('action' => 'togglewindow' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
-			echo "</td>";
-        }
-        if ($room->getDoor() == 1){
-        	echo "<td style='text-align: right;'>";
-        	echo "<span style='color:orange;'>AUF</span> ";
-        	echo "<a href='" . $this->url('home', array('action' => 'toggledoor' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
-        	echo "</td>";
-        } else {
-        	echo "<td style='text-align: right;'>";
-        	echo "<span style='color:green;'>ZU</span> ";
-        	echo "<a href='" . $this->url('home', array('action' => 'toggledoor' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
-        	echo "</td>";
+		} else {
+        	// TODO detect non relevat status by inspecting configuration
         }
         echo "<td><a href='" . $this->url('home', array('action' => 'editroom' , 'id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'>Eintreten &raquo;</a>" . "</td>";
         echo "</tr>";
@@ -407,7 +406,7 @@ echo "</ul>";
         <div class="span12">
                 <h2>Haussystem</h2>
                 <p>
-                        Energief�llstand Solaranlage; Anzahl der Benutzer; Datenzugriffe extern;
+                        Energiefuellstand Solaranlage; Anzahl der Benutzer; Datenzugriffe extern;
                 </p>
                 <p>
                         <a class="btn" href="">Betreten</a>

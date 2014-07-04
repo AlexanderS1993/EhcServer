@@ -20,6 +20,8 @@ class IndexController extends AbstractActionController {
 	protected $roomTable;
 	const ROUTE_LOGIN = 'zfcuser/login';
 	const ROUTE_HOME = 'home';
+	const CONFIG_KEY_ROOM = "room";
+	const CONFIG_KEY_ACTION = "action";
 	
 	// ========================================================================================================
 	// DEVELOPMENT AREA Webapp
@@ -37,22 +39,23 @@ class IndexController extends AbstractActionController {
 		// 1 = turn switch in room one from 0 to 1; ... change switch to actorA
 		// 2 = turn switch in room two from 1 to 0;
 		$route = static::ROUTE_HOME;
+		$config = $this->getServiceLocator()->get('config');
+		$ehomeConfig = $config['ehomeConfig'];
 		switch ($actionId){
     	case 0: // go to home
     		// use FlashMessenger
-    		$msg = $bundle['redirectToHome'];
-    		$this->flashMessenger()->addMessage($msg);
+    		$this->createFlashMessage('redirectToHome');
         	$route = static::ROUTE_HOME;
         	break;
-    	case 1:
-        	Debug::dump("BP 1");
+    	case 1: // turn switch on in room infotainment, see first defined action
+    		
+    		$action = $ehomeConfig[''];
         	break;
-    	case 2:
+    	case 2: // turn switch off in room infotainment, see implicitely defined action related to second state of action 1
         	Debug::dump("BP 2");
         	break;
     	default:
-    		$msg = $bundle['redirectToHome'];
-    		$this->flashMessenger()->addMessage($msg);
+    		$this->createFlashMessage('redirectToHome');
     		$route = static::ROUTE_HOME;
     		break;
 		}
@@ -218,6 +221,7 @@ class IndexController extends AbstractActionController {
 	
 	public function indexAction(){
 		if (! $this->zfcUserAuthentication ()->hasIdentity ()) { // check for valid session
+			$this->createFlashMessage('accessDenied');
 			return $this->redirect ()->toRoute ( static::ROUTE_LOGIN );
 		}
 		// scenario: submit button
@@ -225,48 +229,86 @@ class IndexController extends AbstractActionController {
 		$email = $user->getEmail();
 		$rooms = $this->getRoomTable()->fetchAll();
 		$events = $this->getEventTable()->fetchAll();
+		// went through configuration to get all starting values 
+		// and to identify all necessay db queries
+		$config = $this->getServiceLocator()->get('config');
+		$ehomeConfig = $config['ehomeConfig'];
+		$configRooms = $ehomeConfig[static::CONFIG_KEY_ROOM];
+		$configActions = $ehomeConfig[static::CONFIG_KEY_ACTION];
+		foreach ($configRooms as $configRoom){
+			// gehe in den Raum 
+			$roomId = $configRoom['id'];
+			$room = $this->getRoomTable()->getRoom($roomId);
+			// ermittle die Funktionalitaet im Raum
+			foreach($configActions as $configAction){
+				$actionId = $configAction['id'];
+				$roomIdOfAction = $configAction['roomId'];
+				if ($roomIdOfAction == $roomId){
+					// es gibt eine Action fuer die man eine Query erzeugen will
+					$actionName = $configAction['name'];
+					switch ($actionName){
+    				case "switch":
+    					//var_dump("BP switch");
+    					// annahme switch entspricht switch 1
+        				break;
+    				case "humidity":
+    					//var_dump("BP humidity");
+        				break;
+    				case "temperature":
+        				//var_dump("BP temperature");
+        				break;
+    				default:
+    					//var_dump("BP default");
+    					break;
+					}	 
+				}
+			 
+			// suche Wert aus der Datenbak zur Funktionalitaet
+			
+			// belege Variable fuer spaetere Anzeige im View
+			} // end foreach configActions
+		} // end foreach configRooms
+		
 		$lightoneBath = false;
 		$lighttwoBath = false;
 		$lightoneKitchen = false;
 		$lighttwoKitchen = false;
 		$lightoneLivingRoom = false;
 		$lighttwoLivingRoom = false;
-		$rooms->buffer();
+		$rooms->buffer(); // TODO elaborate how this works!
 		foreach ($rooms as $room){
 			$id = $room->getId ();
 			if ($id == 3){
-				$lightoneBathValue = $room->getLightone();
-				$lighttwoBathValue = $room->getLighttwo();
-				if ($lightoneBathValue == 100) {
-					$lightoneBath = true;
-				}
-				if ($lighttwoBathValue == 100) {
-					$lighttwoBath = true;
-				}
+// 				$lightoneBathValue = $room->getLightone();
+// 				$lighttwoBathValue = $room->getLighttwo();
+// 				if ($lightoneBathValue == 100) {
+// 					$lightoneBath = true;
+// 				}
+// 				if ($lighttwoBathValue == 100) {
+// 					$lighttwoBath = true;
+// 				}
 			} else if ($id == 1) {
-				$lightoneKitchenValue = $room->getLightone();
-				$lighttwoKitchenValue = $room->getLighttwo();
-				if ($lightoneKitchenValue == 100) {
-					$lightoneKitchen = true;
-				}
-				if ($lighttwoKitchenValue == 100) {
-					$lighttwoKitchen = true;
-				}
+// 				$lightoneKitchenValue = $room->getLightone();
+// 				$lighttwoKitchenValue = $room->getLighttwo();
+// 				if ($lightoneKitchenValue == 100) {
+// 					$lightoneKitchen = true;
+// 				}
+// 				if ($lighttwoKitchenValue == 100) {
+// 					$lighttwoKitchen = true;
+// 				}
 			} else if ($id == 2) {
-				$lightoneLivingRoomValue = $room->getLightone();
-				$lighttwoLivingRoomValue = $room->getLighttwo();
-				if ($lightoneLivingRoomValue == 100) {
-					$lightoneLivingRoom = true;
-				}
-				if ($lighttwoLivingRoomValue == 100) {
-					$lighttwoLivingRoom = true;
-				}
+// 				$lightoneLivingRoomValue = $room->getLightone();
+// 				$lighttwoLivingRoomValue = $room->getLighttwo();
+// 				if ($lightoneLivingRoomValue == 100) {
+// 					$lightoneLivingRoom = true;
+// 				}
+// 				if ($lighttwoLivingRoomValue == 100) {
+// 					$lighttwoLivingRoom = true;
+// 				}
 			} else {
 			}
 		}
 		$config = $this->getServiceLocator()->get('Config');
-		$jobaGlobalOptions = $config['jobaGlobalOptions'];
-		$reduceToLocal = $jobaGlobalOptions['localNetwork'];
 		$ehomeConfig = $config['ehomeConfig'];
 		$floorplanHeader = $ehomeConfig['residentUser'] . ", " . $ehomeConfig['residentStreet'] . ", " .  $ehomeConfig['residentCity'];
 		return new ViewModel ( array (
@@ -280,7 +322,9 @@ class IndexController extends AbstractActionController {
 				'lightoneLivingRoom' => $lightoneLivingRoom,
 				'lighttwoLivingRoom' => $lighttwoLivingRoom,
 				'localNetwork' => $reduceToLocal,
-				'floorplanHeader' => $floorplanHeader
+				'floorplanHeader' => $floorplanHeader,
+				'showFloorplan' => false, // TODO improve
+				'ehomeConfig' => $ehomeConfig,
 		) );
 	}
 	
