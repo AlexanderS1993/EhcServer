@@ -25,6 +25,7 @@ return array (
 				// Funktionsname, Zustaende 
 				// (wenn 2 dann wird binaer angenommen, 0 und 1; wenn 1 wird Sensorwert angenommen, auslesen)
 				// es folgen die weiteren Parameter mit der Raumkennung(en);
+				// das Jobaevent auch direkt festgelegt werden.
 				array('switch', 2, 5), 
 				array('humidity', 1, 5),
 				array('temperature', 1, 5),
