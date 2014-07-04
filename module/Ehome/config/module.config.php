@@ -31,6 +31,11 @@ return array (
 				array('temperature', 1, 5),
 			),
 		),
+		'ehomeBundle' => array( 
+			'key' => 'value',
+			'accessDenied' => 'Der Zugriff wurde verweigert.',
+			'redirectToHome' => 'Es wurde keine Aktion erkannt, es erfolgt die Weiterleitung auf die Startseite.',
+		),
 		'controllers' => array (
 				'invokables' => array (
 						'Ehome\Controller\Index' => 'Ehome\Controller\IndexController',

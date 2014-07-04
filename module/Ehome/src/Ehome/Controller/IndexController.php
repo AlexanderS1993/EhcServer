@@ -19,6 +19,7 @@ class IndexController extends AbstractActionController {
 	protected $eventTable;
 	protected $roomTable;
 	const ROUTE_LOGIN = 'zfcuser/login';
+	const ROUTE_HOME = 'home';
 	
 	// ========================================================================================================
 	// DEVELOPMENT AREA Webapp
@@ -26,16 +27,25 @@ class IndexController extends AbstractActionController {
 		
 		// TODO current use case under development:
 		// trigger action in a more generic way
-		if (! $this->zfcUserAuthentication()->hasIdentity()) { // check for valid session
+		$config = $this->getServiceLocator()->get('config');
+		$bundle = $config['ehomeBundle'];
+		if (!$this->zfcUserAuthentication()->hasIdentity()) { // check for valid session
+			$msg = $bundle['accessDenied'];
+			$this->flashMessenger()->addMessage($msg);
 			return $this->redirect()->toRoute(static::ROUTE_LOGIN);
 		}
 		$actionId = $this->params()->fromRoute('id');
 		// Funktionsmapping  ...
+		// 0 = same as null; 
 		// 1 = turn switch in room one from 0 to 1; ... change switch to actorA
 		// 2 = turn switch in room two from 1 to 0;
+		$route = static::ROUTE_HOME;
 		switch ($actionId){
-    	case 0:
-        	Debug::dump("BP 0");
+    	case 0: // go to home
+    		// use FlashMessenger
+    		$msg = $bundle['redirectToHome'];
+    		$this->flashMessenger()->addMessage($msg);
+        	$route = static::ROUTE_HOME;
         	break;
     	case 1:
         	Debug::dump("BP 1");
@@ -44,10 +54,13 @@ class IndexController extends AbstractActionController {
         	Debug::dump("BP 2");
         	break;
     	default:
-    		Debug::dump("BP X");
+    		$msg = $bundle['redirectToHome'];
+    		$this->flashMessenger()->addMessage($msg);
+    		$route = static::ROUTE_HOME;
     		break;
 		}
-		
+		// redirect
+		return $this->redirect()->toRoute($route);
 		
 		// use case: fetch CO2-data
 		// ...
@@ -201,7 +214,7 @@ class IndexController extends AbstractActionController {
 		// 				'id' => $id,
 		// 				'form' => $form
 		// 		);
-		return new ViewModel();
+		//return new ViewModel();
 		//return $this->redirect()->toRoute('home');
 	}
 	// ======================================================================================================================
