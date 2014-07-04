@@ -27,11 +27,8 @@ class IndexController extends AbstractActionController {
 		
 		// TODO current use case under development:
 		// trigger action in a more generic way
-		$config = $this->getServiceLocator()->get('config');
-		$bundle = $config['ehomeBundle'];
-		if (!$this->zfcUserAuthentication()->hasIdentity()) { // check for valid session
-			$msg = $bundle['accessDenied'];
-			$this->flashMessenger()->addMessage($msg);
+		if (! $this->zfcUserAuthentication()->hasIdentity()) { // check for valid session
+			$this->createFlashMessage('accessDenied');
 			return $this->redirect()->toRoute(static::ROUTE_LOGIN);
 		}
 		$actionId = $this->params()->fromRoute('id');
@@ -515,6 +512,17 @@ class IndexController extends AbstractActionController {
 		$message->setType("message");
 		$message->setDone(0);
 		$this->getEventTable()->saveEvent($message);
+	}
+	
+	private function createFlashMessage($key){
+		$config = $this->getServiceLocator()->get('config');
+		$bundle = $config['ehomeBundle'];
+		$msg = $bundle[$key];
+		// if key is not found, show key as string
+		if ($msg == ""){
+			$msg = $key;
+		}
+		$this->flashMessenger()->addMessage($msg);
 	}
 }
 ?>
