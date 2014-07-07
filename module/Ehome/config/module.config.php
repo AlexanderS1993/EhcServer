@@ -5,16 +5,14 @@ namespace Ehome;
 return array (
 		'ehomeGlobalOptions' => array(
 			'serverIp' => '131.188.209.50',
-			'networkIp' => 'xxx.xxx.xxx.xx',	
+			'networkIp' => 'xxx.xxx.xxx.xx', // TODO obsolete?
 		),
 		'ehomeConfig' => array(
 			'residentUser' => 'Rosemarie Schmidt',
 			'residentStreet' => 'Fürther Straße 246b',
 			'residentCity' => ' 90429 Nürnberg',
-			'floorplan' => 'floorplan.jpg', // aktuell in /public/img/ choose '' for no floorplan
-			// notwendige Angaben, damit DB und Geschaeftslogik generisch erstellt werden kann
-			// Konvention zur room-Angabe:
-			// name, id, 
+			'floorplan' => '', // floorplan.jpg choose '' for no floorplan
+			// configuration for dynamic system generation
 			'room' => array(
 				array('name' => 'Besprechungsraum', 'id' => 1),
 				array('name' => 'Energie', 'id' => 2),

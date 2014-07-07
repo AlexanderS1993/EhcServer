@@ -23,100 +23,93 @@ class IndexController extends AbstractActionController {
 	const CONFIG_KEY_ROOM = "room";
 	const CONFIG_KEY_ACTION = "action";
 	
-	// ========================================================================================================
-	// DEVELOPMENT AREA Webapp
-	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
-		
-		// TODO current use case under development:
-		// trigger action in a more generic way
+	public function doAction(){
+		// TODO : $this->createMessage("Protokoll", "Raum '" . $room->getName() . "' konfiguriert.");
 		if (! $this->zfcUserAuthentication()->hasIdentity()) { // check for valid session
 			$this->createFlashMessage('accessDenied');
 			return $this->redirect()->toRoute(static::ROUTE_LOGIN);
 		}
 		$actionId = $this->params()->fromRoute('id');
-		// Funktionsmapping  ...
-		// 0 = same as null; 
-		// 1 = turn switch in room one from 0 to 1; ... change switch to actorA
-		// 2 = turn switch in room two from 1 to 0;
 		$route = static::ROUTE_HOME;
 		$config = $this->getServiceLocator()->get('config');
 		$ehomeConfig = $config['ehomeConfig'];
 		$ehomeConfigActions = $ehomeConfig['action'];
 		switch ($actionId){
-    	case 0: // go to home
-    		// use FlashMessenger
-    		$this->createFlashMessage('redirectToHome');
-        	$route = static::ROUTE_HOME;
-        	break;
-    	case 1: // turn switch on in room infotainment, see first defined action
-    		var_dump("Action - 1");
-    		// get relevant data from config and trigger saveRoom()
-    		foreach($ehomeConfigActions as $ehomeConfigAction){
-    			if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
-    				$roomId = $ehomeConfigAction['roomId'];
-    				$actionType = $ehomeConfigAction['type'];
-    				$actionValue = $ehomeConfigAction['value'];
-    				// querie detection
-    				if ($actionType == 'switch'){ // TODO use const vars!
-    					if ($actionValue == 'turnOn'){
-    						$room = $this->getRoomTable()->getRoom($roomId);
-    						$room->setSwitch(100);
-    						$this->getRoomTable()->saveRoom($room);
-    					} else if ($actionValue == 'turnOff'){
-    						$room = $this->getRoomTable()->getRoom($roomId);
-    						$room->setSwitch(0);
-    						$this->getRoomTable()->saveRoom($room);
-    					} else {
-    						throw new \RuntimeException("Action Detection failed!");
-    					}
-    				} else if ($actionType == 'humidity'){
-    					
-    				} else if ($actionType == 'temperature'){
-    					
-    				} else {
-    					throw new \RuntimeException("Action Detection failed!");
-    				}
-    			}
-    		}
-        	break;
-    	case 2: // turn switch off in room infotainment, see implicitely defined action related to second state of action 1
-        	var_dump("Action - 2");
-    		// get relevant data from config and trigger saveRoom()
-    		foreach($ehomeConfigActions as $ehomeConfigAction){
-    			if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
-    				$roomId = $ehomeConfigAction['roomId'];
-    				$actionType = $ehomeConfigAction['type'];
-    				$actionValue = $ehomeConfigAction['value'];
-    				// querie detection
-    				if ($actionType == 'switch'){ // TODO use const vars!
-    					if ($actionValue == 'turnOn'){
-    						$room = $this->getRoomTable()->getRoom($roomId);
-    						$room->setSwitch(100);
-    						$this->getRoomTable()->saveRoom($room);
-    					} else if ($actionValue == 'turnOff'){
-    						$room = $this->getRoomTable()->getRoom($roomId);
-    						$room->setSwitch(0);
-    						$this->getRoomTable()->saveRoom($room);
-    					} else {
-    						throw new \RuntimeException("Action Detection failed!");
-    					}
-    				} else if ($actionType == 'humidity'){
-    					
-    				} else if ($actionType == 'temperature'){
-    					
-    				} else {
-    					throw new \RuntimeException("Action Detection failed!");
-    				}
-    			}
-    		}
-        	break;
-    	default:
-    		$this->createFlashMessage('redirectToHome');
-    		$route = static::ROUTE_HOME;
-    		break;
+			case 0: // go to home
+				$this->createFlashMessage('redirectToHome');
+				$route = static::ROUTE_HOME;
+				break;
+			case 1: // turn switch on in room infotainment, see first defined action
+				foreach($ehomeConfigActions as $ehomeConfigAction){
+					if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
+						$roomId = $ehomeConfigAction['roomId'];
+						$actionType = $ehomeConfigAction['type'];
+						$actionValue = $ehomeConfigAction['value'];
+						// querie detection
+						if ($actionType == 'switch'){ // TODO use const vars!
+							if ($actionValue == 'turnOn'){
+								$room = $this->getRoomTable()->getRoom($roomId);
+								$room->setSwitch(100);
+								$this->getRoomTable()->saveRoom($room);
+							} else if ($actionValue == 'turnOff'){
+								$room = $this->getRoomTable()->getRoom($roomId);
+								$room->setSwitch(0);
+								$this->getRoomTable()->saveRoom($room);
+							} else {
+								throw new \RuntimeException("Action Detection failed!");
+							}
+						} else if ($actionType == 'humidity'){ // nothing to do
+						} else if ($actionType == 'temperature'){ // nothing to do
+						} else { throw new \RuntimeException("Action Detection failed!");
+						}
+					}
+				}
+				break;
+			case 2: // turn switch off in room infotainment, see implicitely defined action related to second state of action 1
+				// get relevant data from config and trigger saveRoom()
+				foreach($ehomeConfigActions as $ehomeConfigAction){
+					if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
+						$roomId = $ehomeConfigAction['roomId'];
+						$actionType = $ehomeConfigAction['type'];
+						$actionValue = $ehomeConfigAction['value'];
+						// querie detection
+						if ($actionType == 'switch'){ // TODO use const vars!
+							if ($actionValue == 'turnOn'){
+								$room = $this->getRoomTable()->getRoom($roomId);
+								$room->setSwitch(100);
+								$this->getRoomTable()->saveRoom($room);
+							} else if ($actionValue == 'turnOff'){
+								$room = $this->getRoomTable()->getRoom($roomId);
+								$room->setSwitch(0);
+								$this->getRoomTable()->saveRoom($room);
+							} else {
+								throw new \RuntimeException("Action Detection failed!");
+							}
+						} else if ($actionType == 'humidity'){
+								
+						} else if ($actionType == 'temperature'){
+								
+						} else {
+							throw new \RuntimeException("Action Detection failed!");
+						}
+					}
+				}
+				break;
+			default:
+				$this->createFlashMessage('redirectToHome');
+				$route = static::ROUTE_HOME;
+				break;
 		}
 		// redirect
 		return $this->redirect()->toRoute($route);
+	}
+	
+	// ========================================================================================================
+	// DEVELOPMENT AREA Webapp
+	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
+		
+		// TODO current use case under development:
+		// ...
 		
 		// use case: fetch CO2-data
 		// ...
@@ -285,61 +278,12 @@ class IndexController extends AbstractActionController {
 		$email = $user->getEmail();
 		$rooms = $this->getRoomTable()->fetchAll();
 		$events = $this->getEventTable()->fetchAll();
-		$config = $this->getServiceLocator()->get('config');
-		$ehomeConfig = $config['ehomeConfig'];
-		$configRooms = $ehomeConfig[static::CONFIG_KEY_ROOM];
-		$configActions = $ehomeConfig[static::CONFIG_KEY_ACTION];
-		foreach ($configRooms as $configRoom){
-			// gehe in den Raum 
-			$roomId = $configRoom['id'];
-			$room = $this->getRoomTable()->getRoom($roomId);
-			// ermittle die Funktionalitaet im Raum
-			foreach($configActions as $configAction){
-				$actionId = $configAction['id'];
-				$roomIdOfAction = $configAction['roomId'];
-				if ($roomIdOfAction == $roomId){
-					// es gibt eine Action fuer die man eine Query erzeugen will
-					$actionName = $configAction['type'];
-					switch ($actionName){
-    				case "switch":
-    					$switchValue = $room->getSwitch();
-    					//var_dump("BP switch value : " . $switchValue . "; room " . $room->getId());
-    					if ($switchValue != null && $switchValue != 0){ 
-    						var_dump("BP set");
-    					} else { // 0 or null
-    						var_dump("BP unset");
-    					}
-        				break;
-    				case "humidity":
-    					//var_dump("BP humidity");
-    					$humidityValue = $room->getHumidity();
-    					//var_dump("BP humidity value : " . $humidityValue);
-        				break;
-    				case "temperature":
-        				//var_dump("BP temperature");
-    					$temperatureValue = $room->getTemperature();
-    					//var_dump("BP temperature value : " . $temperatureValue);
-        				break;
-    				default:
-    					//var_dump("BP default");
-    					break;
-					}	 
-				}
-			 
-			// suche Wert aus der Datenbak zur Funktionalitaet
-			
-			// belege Variable fuer spaetere Anzeige im View
-			} // end foreach configActions
-		} // end foreach configRooms
-		
 		$config = $this->getServiceLocator()->get('Config');
 		$ehomeConfig = $config['ehomeConfig'];
-		$floorplanHeader = $ehomeConfig['residentUser'] . ", " . $ehomeConfig['residentStreet'] . ", " .  $ehomeConfig['residentCity'];
 		return new ViewModel ( array (
 				'rooms' => $rooms,
 				'events' => $events,
 				'useremail' => $email,
-				'floorplanHeader' => $floorplanHeader,
 				'ehomeConfig' => $ehomeConfig,
 		) );
 	}
@@ -350,83 +294,6 @@ class IndexController extends AbstractActionController {
 	
 	public function commentAction(){
 		return $this->redirect()->toRoute('contact');
-	}
-	
-	public function togglelightoneAction(){
-		$roomId = (int) $this->params()->fromRoute('id', 0);
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$state = $room->getLightone();
-		$config = $this->getServiceLocator()->get('Config');
-		$jobaGlobalOptions = $config['jobaGlobalOptions'];
-		$ip = $jobaGlobalOptions['networkIp'];
-		if ($state == "100"){
-			$room->setLightone("0");
-			// call fhem url
-			$client = new Client();
-			$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-			$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set%20steckdose%20off&room=Infotainment';
-			$client->setUri($uri);
-			$result = $client->send();
-			$body = $result->getBody();
-			$this->createMessage("Protokoll", "Licht Nummer Eins im Raum '" . $room->getName() . "' ausgeschaltet.");
-		} else {
-			$room->setLightone("100");
-			// call fhem url
-			$client = new Client();
-			$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-			$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set%20steckdose%20on&room=Infotainment';
-			$client->setUri($uri);
-			$result = $client->send();
-			$body = $result->getBody();
-			$this->createMessage("Protokoll", "Licht Nummer Eins im Raum '" . $room->getName() . "' eingeschaltet.");
-		}
-		$this->getRoomTable()->saveRoom($room);
-		return $this->redirect()->toRoute('home'); // TODO create const
-	}
-	
-	public function togglelighttwoAction(){
-		$roomId = (int) $this->params()->fromRoute('id', 0);
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$state = $room->getLighttwo();
-		if ($state == "100"){
-			$room->setLighttwo("0");
-			$this->createMessage("Protokoll", "Licht Nummer Zwei im Raum '" . $room->getName() . "' ausgeschaltet.");
-		} else {
-			$room->setLighttwo("100");
-			$this->createMessage("Protokoll", "Licht Nummer Eins im Raum '" . $room->getName() . "' eingeschaltet.");
-		}
-		$this->getRoomTable()->saveRoom($room);
-		return $this->redirect()->toRoute('home'); // TODO create const
-	}
-	
-	public function togglewindowAction(){
-		$roomId = (int) $this->params()->fromRoute('id', 0);
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$state = $room->getWindow();
-		if ($state == "1"){
-			$room->setWindow("0");
-			$this->createMessage("Protokoll", "Fenster im Raum '" . $room->getName() . "' geschlossen.");
-		} else {
-			$room->setWindow("1");
-			$this->createMessage("Protokoll", "Fenster im Raum '" . $room->getName() . "' geöffnet.");
-		}
-		$this->getRoomTable()->saveRoom($room);
-		return $this->redirect()->toRoute('home'); // TODO create const
-	}
-	
-	public function toggledoorAction(){
-		$roomId = (int) $this->params()->fromRoute('id', 0);
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$state = $room->getDoor();
-		if ($state == "1"){
-			$room->setDoor("0");
-			$this->createMessage("Protokoll", "Türe im Raum '" . $room->getName() . "' geschlossen.");
-		} else {
-			$room->setDoor("1");
-			$this->createMessage("Protokoll", "Türe im Raum '" . $room->getName() . "' geöffnet.");
-		}
-		$this->getRoomTable()->saveRoom($room);
-		return $this->redirect()->toRoute('home'); // TODO create const
 	}
 	
 	public function togglemessageAction(){
@@ -477,7 +344,7 @@ class IndexController extends AbstractActionController {
 			}
 		}
 		return new ViewModel(array(
-				'form' => $eventForm,
+			'form' => $eventForm,
 		));
 	}
 	
@@ -493,48 +360,23 @@ class IndexController extends AbstractActionController {
 				$room->setName($formData['name']);
 				$room->setHumidity($formData['humidity']);
 				$room->setTemperature($formData['temperature']);
-				if ($formData['lightone'] == 1){
-					$room->setLightone("100");
+				if ($formData['switch'] == 1){
+					$room->setSwitch("100");
 				}else{
-					$room->setLightone("0");
+					$room->setSwitch("0");
 				}
-				if ($formData['lighttwo'] == 1){
-					$room->setLighttwo("100");
-				} else {
-					$room->setLighttwo ( "0" );
-				}
-				$room->setWindow($formData['window']);
-				$room->setDoor($formData['door']);
 				$this->getRoomTable()->saveRoom ( $room );
 				$this->createMessage("Protokoll", "Raum '" . $room->getName() . "' konfiguriert.");
-				return $this->redirect ()->toRoute ( 'home' );
+				return $this->redirect()->toRoute('home');
 			}
 		} else { // show form
-			$room = $this->getRoomTable ()->getRoom ( $roomId );
-			$roomForm->bind( $room );
-			$lightOneValue = $room->getLightone();
-			if ($lightOneValue == '100') {
-				$roomForm->get ( 'lightone' )->setValue ( 1 );
+			$room = $this->getRoomTable()->getRoom($roomId);
+			$roomForm->bind($room);
+			$switchValue = $room->getSwitch();
+			if ($switchValue == '100') {
+				$roomForm->get('switch')->setValue(1);
 			} else {
-				$roomForm->get ( 'lightone' )->setValue ( 0 );
-			}
-			$lightTwoValue = $room->getLighttwo ();
-			if ($lightTwoValue == '100'){
-            	$roomForm->get('lighttwo')->setValue(1);
-            } else {
-            	$roomForm->get('lighttwo')->setValue(0);
-            }
-            $windowValue = $room->getWindow();
-            if ($windowValue == '1') {
-            	$roomForm->get('window')->setValue (1);
-            } else {
-            	$roomForm->get('window')->setValue (0);
-            }
-		    $doorValue = $room->getDoor();
-            if ($doorValue == '1') {
-            	$roomForm->get('door')->setValue(1);
-            } else {
-            	$roomForm->get('door')->setValue ( 0 );
+				$roomForm->get('switch')->setValue(0);
 			}
 		}
 		return new ViewModel ( array (

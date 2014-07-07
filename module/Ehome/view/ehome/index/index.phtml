@@ -1,7 +1,15 @@
 <?php 
 use \Zend\Debug\Debug;
 
-// collect data structures from database
+
+$showFloorplan = false;
+var_dump($ehomeConfig['floorplan']);
+if ($ehomeConfig['floorplan'] != ""){
+	$showFloorplan = true;
+}
+$floorplanHeader = $ehomeConfig['residentUser'] . ", " . $ehomeConfig['residentStreet'] . ", " .  $ehomeConfig['residentCity'];
+
+// process event table to messages
 $logMessages = array();
 $healthMessages = array();
 $warningMessages = array();
@@ -40,93 +48,16 @@ foreach($events as $event){
 </div>
 <div class="hero-unit">
 	<h1><?php echo sprintf("Willkommen!", '<span class="zf-green">', '</span>') ?></h1>
-	<p><?php 
-		echo $floorplanHeader; 
-	?></p>
-	<p
-		<?php
-			//if(!$showFloorplan){
-				echo 'style="display:none"';
-			//}
-			?>>
+	<p><?php echo $floorplanHeader; ?></p>
+	<p <?php if(!$showFloorplan){ echo 'style="display:none"'; } ?>>
 		[<a class="show_hide" href="#" rel="#container">+/-</a>]
 	</p>
 	<div id="container"
-		<?php
-			//if(!$showFloorplan){
-				echo 'style="display:none"';
-			//}
-			?>>
+		<?php if(!$showFloorplan){ echo 'style="display:none"'; } ?>>
 		<div id="background">
 			<img alt="Floorplan"
 				src='<?php echo $this->basePath();?>/img/floorplan.jpg'>
 		</div>
-		<div id="light_kitchen_one" class="light">
-			<img class="img_light" id="img_light_kitchen_one"
-				alt="gluehbirne_aus"
-				src=<?php
-if ($lightoneKitchen) {
-        echo $this->basePath() . '/img/gluehbirne_an.png';
-} else {
-        echo $this->basePath() . '/img/gluehbirne_aus.png';
-}
-                                ?> />
-		</div>
-		<div id="light_kitchen_two" class="light">
-			<img class="img_light" id="img_light_kitchen_two"
-				alt="gluehbirne_aus"
-				src=<?php
-if ($lighttwoKitchen) {
-        echo $this->basePath() . '/img/gluehbirne_an.png';
-} else {
-        echo $this->basePath() . '/img/gluehbirne_aus.png';
-}
-                                ?> />
-		</div>
-		<div id="light_bathroom_one" class="light">
-			<img class="img_light" id="img_light_bathroom_one"
-				alt="gluehbirne_aus"
-				src=<?php
-if ($lightoneBath) {
-    echo $this->basePath() . '/img/gluehbirne_an.png';
-} else {
-    echo $this->basePath() . '/img/gluehbirne_aus.png';
-}
-                ?> />
-		</div>
-		<div id="light_bathroom_two" class="light">
-			<img class="img_light" id="img_light_bathroom_two"
-				alt="gluehbirne_aus"
-				src=<?php
-if ($lighttwoBath) {
-    echo $this->basePath() . '/img/gluehbirne_an.png';
-} else {
-    echo $this->basePath() . '/img/gluehbirne_aus.png';
-}
-                ?> />
-		</div>
-		<div id="light_living_one" class="light">
-			<img class="img_light" id="img_light_living_one" alt="gluehbirne_aus"
-				src=<?php 
-if ($lightoneLivingRoom) {
-        echo $this->basePath() . '/img/gluehbirne_an.png';
-} else {
-        echo $this->basePath() . '/img/gluehbirne_aus.png';
-}
-                                ?> />
-		</div>
-		<!-- // light-living -->
-		<div id="light_living_two" class="light">
-			<img class="img_light" id="img_light_living_two" alt="gluehbirne_aus"
-				src=<?php 
-if ($lighttwoLivingRoom) {
-        echo $this->basePath() . '/img/gluehbirne_an.png';
-} else {
-        echo $this->basePath() . '/img/gluehbirne_aus.png';
-}
-                                ?> />
-		</div>
-		<!-- // light-living -->
 	</div>
 	<!-- // div container -->
 </div>
@@ -136,17 +67,14 @@ if ($lighttwoLivingRoom) {
 	<div class='span4'>
 		<h2>Cockpit</h2>
 		<div style='float: left; padding-right: 16px;'><?php 
-			if (!$this->localNetwork){
+			//if (!$this->localNetwork){ // TODO if relevant detect if there is a connection automatically
 				echo $this->gravatar($this->zfcUserIdentity()->getEmail());
-			} 
+			//} 
 		?>
     </div>
-		<p>
-    	Angemeldet als <?php echo $useremail; ?>
-    </p>
-		<p>
-			<a class='btn'
-				href="<?php echo $this->url('home', array('action' => 'logout')); ?>">Ausloggen</a>
+		<p> Angemeldet als <?php echo $useremail; ?>
+    	</p>
+		<p><a class='btn' href="<?php echo $this->url('home', array('action' => 'logout')); ?>">Ausloggen</a>
 		</p>
 	</div>
 	<div class='span5'>
@@ -207,56 +135,75 @@ echo "</ul>"
 					<th>Aktion</th>
 				</tr>
 <?php 
-// show room table
-foreach($this->rooms as $room ) {
+// show rooms table on website
+foreach($this->rooms as $room ){
 	echo "<tr>";
-	echo "<td>" . $room->getName () . "</td>";
+	echo "<td>" . $room->getName() . "</td>";
 	echo "<td style='text-align: right;'>" . $room->getHumidity () . "</td>";
 	echo "<td style='text-align: right;'>" . $room->getTemperature () . "</td>";
-	if ($room->getSwitch() == 100) {
-		echo "<td style='text-align: right;'>";
-		echo "<span style='color:orange;'>AN </span> ";
-		$roomId = $room->getId();
-		$isRelevant = false;
-		$configActions = $ehomeConfig['action'];
-		echo "<a href='" . $this->url('home', array (
-				'action' => 'temp',
-				'id' => 2 // TODO generic
-		) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
-		echo "</td>";
-	} else if ($room->getSwitch() == 0) { // zustand ist 0 also aus, brauchen gruenen knopf mit passender action
+	if ($room->getSwitch() == 100){
 		$formActionId = 0;
-		$configActions = $ehomeConfig['action'];
 		$isRelevant = false;
 		foreach ($configActions as $configAction ) {
-			$actionId = $configAction ['id'];
+			$actionId = $configAction['id'];
 			$actionRoomId = $configAction ['roomId'];
-			if ($room->getId() == $actionRoomId && $configAction ['type'] == "switch" && $configAction['value'] == "turnOn") { // bin hier bei an und ausschalten im passenden raum
-				//var_dump("match: roomId " . $room->getId() . "; ActionId " . $actionId . "; actionRoomId " . $actionRoomId . ";<br>");
-				// match - place action id in form
+			if ($room->getId() == $actionRoomId && $configAction ['type'] == "switch" && $configAction['value'] == "turnOff") {
+				var_dump("BP2");
 				$formActionId = $actionId;
 				$isRelevant = true;
 				echo "<td style='text-align: right;'>";
-				echo "<span style='color:green;'>AUS</span> ";
-				echo "<a href='" . $this->url ( 'home', array (
-						'action' => 'temp',
-						'id' => $formActionId
+				echo "<span style='color:orange;'>AN </span> ";
+				$roomId = $room->getId();
+				$configActions = $ehomeConfig['action'];
+				echo "<a href='" . $this->url('home', array (
+					'action' => 'do',
+					'id' => $formActionId
 				) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
 				echo "</td>";
 			}
 		}
 		if (! $isRelevant) {
 			echo "<td style='text-align: right;'>";
-			echo "<span style='color:green;'>AUS</span> ";
+			echo "<span style='color:grey;'>n. a.</span> ";
 			echo "<a href='" . $this->url ( 'home', array (
-					'action' => 'temp',
-					'id' => $formActionId 
+					'action' => 'do',
+					'id' => 0
+			) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
+			echo "</td>";
+		}
+	} else if ($room->getSwitch() == 0) { // zustand ist 0 also aus, brauchen gruenen knopf mit passender action
+		$formActionId = 0;
+		$configActions = $ehomeConfig['action'];
+		$isRelevant = false;
+		foreach ($configActions as $configAction ) {
+			$actionId = $configAction ['id'];
+			$actionRoomId = $configAction['roomId'];
+			if ($room->getId() == $actionRoomId && $configAction ['type'] == "switch" && $configAction['value'] == "turnOn") {
+				var_dump("BP1");
+				$formActionId = $actionId;
+				$isRelevant = true;
+				echo "<td style='text-align: right;'>";
+				echo "<span style='color:green;'>AUS</span> ";
+				echo "<a href='" . $this->url ('home', array (
+						'action' => 'do',
+						'id' => $formActionId
+				) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
+				echo "</td>";
+			}
+		}
+		if (! $isRelevant){
+			echo "<td style='text-align: right;'>";
+			echo "<span style='color:grey;'>n. a.</span> ";
+			echo "<a href='" . $this->url('home', array (
+					'action' => 'do',
+					'id' => 0
 			) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
 			echo "</td>";
 		}
 
 	} else {
-		// TODO detect non relevat status by inspecting configuration
+		// TODO detect non relevant status by inspecting configuration
+		// TODO think about throwing an exception
 	}
 	echo "<td><a href='" . $this->url ( 'home', array (
 			'action' => 'editroom',
@@ -264,7 +211,7 @@ foreach($this->rooms as $room ) {
 	) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'>Eintreten &raquo;</a>" . "</td>";
 	echo "</tr>";
 }
-	echo "</table>";
+echo "</table>";
 ?>
 		</div>
 				</div>
@@ -283,13 +230,11 @@ foreach($this->rooms as $room ) {
                 <?php 
 echo "<table border='1px'>";
 echo "<tr>";
-echo "<!-- <th>ID</th> -->";
 echo "<th>Datum</th>";
 echo "<th>Uhrzeit</th>";
 echo "<th>Meldung</th>";
 echo "<th>Wert</th>";
 echo "<th>Bemerkung</th>";
-//echo "<th>ID</th>";
 echo "</tr>";
 $healthMessageCounter = 0;
 $healthMessagesReversed = array_reverse($healthMessages);
@@ -319,9 +264,6 @@ foreach($healthMessagesReversed as $healthMessage){
 			echo "<span style='color: red;'>ACHTUNG</span>";
 		}
 		echo "</td>";
-		//echo "<td>";
-		//echo $healthMessage->getId();
-		//echo "</td>";
 		echo "</tr>";
 		$healthMessageCounter++;
 }
