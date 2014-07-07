@@ -24,7 +24,6 @@ class IndexController extends AbstractActionController {
 	const CONFIG_KEY_ACTION = "action";
 	
 	public function doAction(){
-		// TODO : $this->createMessage("Protokoll", "Raum '" . $room->getName() . "' konfiguriert.");
 		if (! $this->zfcUserAuthentication()->hasIdentity()) { // check for valid session
 			$this->createFlashMessage('accessDenied');
 			return $this->redirect()->toRoute(static::ROUTE_LOGIN);
@@ -86,9 +85,9 @@ class IndexController extends AbstractActionController {
 								throw new \RuntimeException("Action Detection failed!");
 							}
 						} else if ($actionType == 'humidity'){
-								
+							// no event triggering found
 						} else if ($actionType == 'temperature'){
-								
+							// no event triggering found
 						} else {
 							throw new \RuntimeException("Action Detection failed!");
 						}
@@ -288,7 +287,7 @@ class IndexController extends AbstractActionController {
 		) );
 	}
 	
-	public function ehometestAction(){
+	public function ehometestAction(){ // show test page, i.e. for user experience tests
 		return new ViewModel();
 	}
 	

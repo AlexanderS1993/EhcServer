@@ -1,9 +1,7 @@
 <?php 
 use \Zend\Debug\Debug;
 
-
 $showFloorplan = false;
-var_dump($ehomeConfig['floorplan']);
 if ($ehomeConfig['floorplan'] != ""){
 	$showFloorplan = true;
 }
@@ -137,6 +135,7 @@ echo "</ul>"
 <?php 
 // show rooms table on website
 foreach($this->rooms as $room ){
+	$showEnterRoom = false;
 	echo "<tr>";
 	echo "<td>" . $room->getName() . "</td>";
 	echo "<td style='text-align: right;'>" . $room->getHumidity () . "</td>";
@@ -148,7 +147,7 @@ foreach($this->rooms as $room ){
 			$actionId = $configAction['id'];
 			$actionRoomId = $configAction ['roomId'];
 			if ($room->getId() == $actionRoomId && $configAction ['type'] == "switch" && $configAction['value'] == "turnOff") {
-				var_dump("BP2");
+				$showEnterRoom = true;
 				$formActionId = $actionId;
 				$isRelevant = true;
 				echo "<td style='text-align: right;'>";
@@ -164,11 +163,8 @@ foreach($this->rooms as $room ){
 		}
 		if (! $isRelevant) {
 			echo "<td style='text-align: right;'>";
-			echo "<span style='color:grey;'>n. a.</span> ";
-			echo "<a href='" . $this->url ( 'home', array (
-					'action' => 'do',
-					'id' => 0
-			) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
+			echo "&nbsp;";
+			//echo "<a href='" . $this->url ( 'home', array ('action' => 'do', 'id' => 0 ) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
 			echo "</td>";
 		}
 	} else if ($room->getSwitch() == 0) { // zustand ist 0 also aus, brauchen gruenen knopf mit passender action
@@ -179,7 +175,7 @@ foreach($this->rooms as $room ){
 			$actionId = $configAction ['id'];
 			$actionRoomId = $configAction['roomId'];
 			if ($room->getId() == $actionRoomId && $configAction ['type'] == "switch" && $configAction['value'] == "turnOn") {
-				var_dump("BP1");
+				$showEnterRoom = true;
 				$formActionId = $actionId;
 				$isRelevant = true;
 				echo "<td style='text-align: right;'>";
@@ -193,22 +189,18 @@ foreach($this->rooms as $room ){
 		}
 		if (! $isRelevant){
 			echo "<td style='text-align: right;'>";
-			echo "<span style='color:grey;'>n. a.</span> ";
-			echo "<a href='" . $this->url('home', array (
-					'action' => 'do',
-					'id' => 0
-			) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
+			echo "&nbsp;";
 			echo "</td>";
 		}
-
 	} else {
 		// TODO detect non relevant status by inspecting configuration
 		// TODO think about throwing an exception
 	}
-	echo "<td><a href='" . $this->url ( 'home', array (
-			'action' => 'editroom',
-			'id' => $room->getId() 
-	) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'>Eintreten &raquo;</a>" . "</td>";
+	if ($showEnterRoom){
+		echo "<td><a href='" . $this->url('home', array ('action' => 'editroom','id' => $room->getId())) . "' title='Bearbeiten des Eintrags' class='btn btn-success'>Eintreten &raquo;</a>" . "</td>";
+	} else {
+		echo "<td>&nbsp;</td>";
+	}
 	echo "</tr>";
 }
 echo "</table>";
