@@ -5,6 +5,7 @@
  */
 chdir(dirname(__DIR__));
 
+
 // joba: APP_ROOT for ContactController
 define('APP_ROOT', realpath(__DIR__ . '/..'));
 
@@ -31,4 +32,6 @@ require 'init_autoloader.php';
 // Run the application!
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();
 
-//phpinfo();
+// connect to xdebug
+// phpinfo(); // check for xdebug, verify by checking for xdebug entry in list;
+

@@ -49,6 +49,9 @@ Tabelleneintraege anzeigen: select * from [table];
 Tabelleneintraege aktualisieren: update room set humidity=20 where id=1;
 Tabellenspalte hinzufuegen (add) / entfernen (drop column) / aendern (change): alter table room drop column lightone; alter table room change column lighttwo switch int(11);
 Tabellenspaltenstruktur anzeigen: show columns from room; 
+Eclipse-PHP-Debugging 
+(XDebug-Installation: coderblog.de/how-to-install-use-configure-xdebug-ubuntu/;
+XDebug-Eclipse-Verbindung, localhost und leeren Restpfad sollte auf index-Action verweisen) 
 
 Entwicklernotizen
 -----------------

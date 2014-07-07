@@ -41,6 +41,7 @@ class IndexController extends AbstractActionController {
 		$route = static::ROUTE_HOME;
 		$config = $this->getServiceLocator()->get('config');
 		$ehomeConfig = $config['ehomeConfig'];
+		$ehomeConfigActions = $ehomeConfig['action'];
 		switch ($actionId){
     	case 0: // go to home
     		// use FlashMessenger
@@ -48,11 +49,66 @@ class IndexController extends AbstractActionController {
         	$route = static::ROUTE_HOME;
         	break;
     	case 1: // turn switch on in room infotainment, see first defined action
-    		
-    		$action = $ehomeConfig[''];
+    		var_dump("Action - 1");
+    		// get relevant data from config and trigger saveRoom()
+    		foreach($ehomeConfigActions as $ehomeConfigAction){
+    			if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
+    				$roomId = $ehomeConfigAction['roomId'];
+    				$actionType = $ehomeConfigAction['type'];
+    				$actionValue = $ehomeConfigAction['value'];
+    				// querie detection
+    				if ($actionType == 'switch'){ // TODO use const vars!
+    					if ($actionValue == 'turnOn'){
+    						$room = $this->getRoomTable()->getRoom($roomId);
+    						$room->setSwitch(100);
+    						$this->getRoomTable()->saveRoom($room);
+    					} else if ($actionValue == 'turnOff'){
+    						$room = $this->getRoomTable()->getRoom($roomId);
+    						$room->setSwitch(0);
+    						$this->getRoomTable()->saveRoom($room);
+    					} else {
+    						throw new \RuntimeException("Action Detection failed!");
+    					}
+    				} else if ($actionType == 'humidity'){
+    					
+    				} else if ($actionType == 'temperature'){
+    					
+    				} else {
+    					throw new \RuntimeException("Action Detection failed!");
+    				}
+    			}
+    		}
         	break;
     	case 2: // turn switch off in room infotainment, see implicitely defined action related to second state of action 1
-        	Debug::dump("BP 2");
+        	var_dump("Action - 2");
+    		// get relevant data from config and trigger saveRoom()
+    		foreach($ehomeConfigActions as $ehomeConfigAction){
+    			if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
+    				$roomId = $ehomeConfigAction['roomId'];
+    				$actionType = $ehomeConfigAction['type'];
+    				$actionValue = $ehomeConfigAction['value'];
+    				// querie detection
+    				if ($actionType == 'switch'){ // TODO use const vars!
+    					if ($actionValue == 'turnOn'){
+    						$room = $this->getRoomTable()->getRoom($roomId);
+    						$room->setSwitch(100);
+    						$this->getRoomTable()->saveRoom($room);
+    					} else if ($actionValue == 'turnOff'){
+    						$room = $this->getRoomTable()->getRoom($roomId);
+    						$room->setSwitch(0);
+    						$this->getRoomTable()->saveRoom($room);
+    					} else {
+    						throw new \RuntimeException("Action Detection failed!");
+    					}
+    				} else if ($actionType == 'humidity'){
+    					
+    				} else if ($actionType == 'temperature'){
+    					
+    				} else {
+    					throw new \RuntimeException("Action Detection failed!");
+    				}
+    			}
+    		}
         	break;
     	default:
     		$this->createFlashMessage('redirectToHome');
@@ -229,8 +285,6 @@ class IndexController extends AbstractActionController {
 		$email = $user->getEmail();
 		$rooms = $this->getRoomTable()->fetchAll();
 		$events = $this->getEventTable()->fetchAll();
-		// went through configuration to get all starting values 
-		// and to identify all necessay db queries
 		$config = $this->getServiceLocator()->get('config');
 		$ehomeConfig = $config['ehomeConfig'];
 		$configRooms = $ehomeConfig[static::CONFIG_KEY_ROOM];
@@ -245,17 +299,26 @@ class IndexController extends AbstractActionController {
 				$roomIdOfAction = $configAction['roomId'];
 				if ($roomIdOfAction == $roomId){
 					// es gibt eine Action fuer die man eine Query erzeugen will
-					$actionName = $configAction['name'];
+					$actionName = $configAction['type'];
 					switch ($actionName){
     				case "switch":
-    					//var_dump("BP switch");
-    					// annahme switch entspricht switch 1
+    					$switchValue = $room->getSwitch();
+    					//var_dump("BP switch value : " . $switchValue . "; room " . $room->getId());
+    					if ($switchValue != null && $switchValue != 0){ 
+    						var_dump("BP set");
+    					} else { // 0 or null
+    						var_dump("BP unset");
+    					}
         				break;
     				case "humidity":
     					//var_dump("BP humidity");
+    					$humidityValue = $room->getHumidity();
+    					//var_dump("BP humidity value : " . $humidityValue);
         				break;
     				case "temperature":
         				//var_dump("BP temperature");
+    					$temperatureValue = $room->getTemperature();
+    					//var_dump("BP temperature value : " . $temperatureValue);
         				break;
     				default:
     					//var_dump("BP default");
@@ -269,45 +332,6 @@ class IndexController extends AbstractActionController {
 			} // end foreach configActions
 		} // end foreach configRooms
 		
-		$lightoneBath = false;
-		$lighttwoBath = false;
-		$lightoneKitchen = false;
-		$lighttwoKitchen = false;
-		$lightoneLivingRoom = false;
-		$lighttwoLivingRoom = false;
-		$rooms->buffer(); // TODO elaborate how this works!
-		foreach ($rooms as $room){
-			$id = $room->getId ();
-			if ($id == 3){
-// 				$lightoneBathValue = $room->getLightone();
-// 				$lighttwoBathValue = $room->getLighttwo();
-// 				if ($lightoneBathValue == 100) {
-// 					$lightoneBath = true;
-// 				}
-// 				if ($lighttwoBathValue == 100) {
-// 					$lighttwoBath = true;
-// 				}
-			} else if ($id == 1) {
-// 				$lightoneKitchenValue = $room->getLightone();
-// 				$lighttwoKitchenValue = $room->getLighttwo();
-// 				if ($lightoneKitchenValue == 100) {
-// 					$lightoneKitchen = true;
-// 				}
-// 				if ($lighttwoKitchenValue == 100) {
-// 					$lighttwoKitchen = true;
-// 				}
-			} else if ($id == 2) {
-// 				$lightoneLivingRoomValue = $room->getLightone();
-// 				$lighttwoLivingRoomValue = $room->getLighttwo();
-// 				if ($lightoneLivingRoomValue == 100) {
-// 					$lightoneLivingRoom = true;
-// 				}
-// 				if ($lighttwoLivingRoomValue == 100) {
-// 					$lighttwoLivingRoom = true;
-// 				}
-			} else {
-			}
-		}
 		$config = $this->getServiceLocator()->get('Config');
 		$ehomeConfig = $config['ehomeConfig'];
 		$floorplanHeader = $ehomeConfig['residentUser'] . ", " . $ehomeConfig['residentStreet'] . ", " .  $ehomeConfig['residentCity'];
@@ -315,15 +339,7 @@ class IndexController extends AbstractActionController {
 				'rooms' => $rooms,
 				'events' => $events,
 				'useremail' => $email,
-				'lightoneBath' => $lightoneBath,
-				'lighttwoBath' => $lighttwoBath,
-				'lightoneKitchen' => $lightoneKitchen,
-				'lighttwoKitchen' => $lighttwoKitchen,
-				'lightoneLivingRoom' => $lightoneLivingRoom,
-				'lighttwoLivingRoom' => $lighttwoLivingRoom,
-				'localNetwork' => $reduceToLocal,
 				'floorplanHeader' => $floorplanHeader,
-				'showFloorplan' => false, // TODO improve
 				'ehomeConfig' => $ehomeConfig,
 		) );
 	}
