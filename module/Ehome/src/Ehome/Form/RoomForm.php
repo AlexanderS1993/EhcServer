@@ -27,14 +27,16 @@ class RoomForm extends Form {
 				'name' => 'humidity',
 				'attributes' => array(
 						'type' => 'text',
-						'id' => 'humidity'),
+						'id' => 'humidity',
+						'readonly' => 'true'),
 				'options' => array('label' => 'Luftfeuchtigkeit')
 		));
 		$this->add(array(
 				'name' => 'temperature',
 				'attributes' => array(
 						'type' => 'text',
-						'id' => 'temperature'),
+						'id' => 'temperature',
+						'readonly' => 'true'),
 				'options' => array('label' => 'Temperatur')
 		));
 		$this->add ( array (
