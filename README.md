@@ -29,7 +29,7 @@ eine eigene Datenbank angelegt.
 Anleitung zum Anpassen an eine neue Umgebung
 --------------------------------------------
 Datenbank kopieren in neuen Namen;
-Neuen Branch anlegen;
+Neuen Branch anlegen und einchecken ();
 Netzwerkverbindungen zu Router und LAN/Internet pruefen;
 Verbindung zu fhem verifizieren, etwa mit Funksteckdose;
 Raumeigenschaften definieren bzw. ueberpruefen;
