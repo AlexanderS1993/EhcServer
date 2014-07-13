@@ -127,26 +127,27 @@ echo "</ul>"
 			<table border="1px">
 				<tr>
 					<th>Name</th>
-					<th>Luftfeuchtigkeit</th>
-					<th>Temperatur</th>
+					<th>Wasserstand</th>
 					<th>Schalter</th>
 					<th>Aktion</th>
 				</tr>
 <?php 
 // show rooms table on website
+$configActions = $ehomeConfig['action'];
 foreach($this->rooms as $room ){
 	$showEnterRoom = false;
 	echo "<tr>";
 	echo "<td>" . $room->getName() . "</td>";
-	echo "<td style='text-align: right;'>" . $room->getHumidity () . "</td>";
-	echo "<td style='text-align: right;'>" . $room->getTemperature () . "</td>";
+	echo "<td style='text-align: right;'>" . $room->getWaterlevel() . "</td>";
 	if ($room->getSwitch() == 100){
 		$formActionId = 0;
 		$isRelevant = false;
+		//var_dump($room);
+		//var_dump("DEBUG" . $actionRoomId . "; ");
 		foreach ($configActions as $configAction ) {
 			$actionId = $configAction['id'];
 			$actionRoomId = $configAction ['roomId'];
-			if ($room->getId() == $actionRoomId && $configAction ['type'] == "switch" && $configAction['value'] == "turnOff") {
+			if ($room->getId() == $actionRoomId && $configAction['type'] == "switch" && $configAction['value'] == "turnOff") {
 				$showEnterRoom = true;
 				$formActionId = $actionId;
 				$isRelevant = true;
@@ -164,12 +165,12 @@ foreach($this->rooms as $room ){
 		if (! $isRelevant) {
 			echo "<td style='text-align: right;'>";
 			echo "&nbsp;";
+			//var_dump($room);
 			//echo "<a href='" . $this->url ( 'home', array ('action' => 'do', 'id' => 0 ) ) . "' title='Bearbeiten des Eintrags' class='btn btn-success'><></a>";
 			echo "</td>";
 		}
 	} else if ($room->getSwitch() == 0) { // zustand ist 0 also aus, brauchen gruenen knopf mit passender action
 		$formActionId = 0;
-		$configActions = $ehomeConfig['action'];
 		$isRelevant = false;
 		foreach ($configActions as $configAction ) {
 			$actionId = $configAction ['id'];

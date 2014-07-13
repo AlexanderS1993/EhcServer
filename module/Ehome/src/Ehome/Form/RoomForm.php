@@ -24,26 +24,18 @@ class RoomForm extends Form {
 				'options' => array('label' => 'Name des Raumes')
 		));
 		$this->add(array(
-				'name' => 'humidity',
+				'name' => 'waterlevel',
 				'attributes' => array(
 						'type' => 'text',
-						'id' => 'humidity',
+						'id' => 'waterlevel',
 						'readonly' => 'true'),
-				'options' => array('label' => 'Luftfeuchtigkeit')
-		));
-		$this->add(array(
-				'name' => 'temperature',
-				'attributes' => array(
-						'type' => 'text',
-						'id' => 'temperature',
-						'readonly' => 'true'),
-				'options' => array('label' => 'Temperatur')
+				'options' => array('label' => 'Wasserstand')
 		));
 		$this->add ( array (
 				'type' => 'Zend\Form\Element\Radio',
 				'name' => 'switch',
 				'options' => array (
-						'label' => 'Schalter',
+						'label' => 'Pumpe',
 						'value_options' => array (
 										'0' => 'Aus',
 										'1' => 'An'

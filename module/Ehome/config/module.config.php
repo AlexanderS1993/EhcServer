@@ -4,7 +4,7 @@ namespace Ehome;
 
 return array (
 		'ehomeGlobalOptions' => array(
-			'serverIp' => '131.188.209.50',
+			'serverIp' => '131.188.209.50', // TODO check?
 			'networkIp' => 'xxx.xxx.xxx.xx', // TODO obsolete?
 		),
 		'ehomeConfig' => array(
@@ -14,12 +14,7 @@ return array (
 			'floorplan' => '', // floorplan.jpg choose '' for no floorplan
 			// configuration for dynamic system generation
 			'room' => array(
-				array('name' => 'Besprechungsraum', 'id' => 1),
-				array('name' => 'Energie', 'id' => 2),
-				array('name' => 'Geschäftsführung', 'id' => 3),
-				array('name' => 'Hiwiraum', 'id' => 4),
-				array('name' => 'Infotainment', 'id' => 5),
-				array('name' => 'LivingLab', 'id' => 6),
+				array('name' => 'Keller', 'id' => 1),
 			), 
 			'action' => array( // TODO create actionTypes, like switch etc.
 				// Konvention zur Funktionsangabe
@@ -28,20 +23,9 @@ return array (
 				// 1 = es ist ein read-only sensor, etwa die Luftfeuchtigkeit;
 				// 2 = es ist eine Komponente, die genau zwei Zustaende annehmen kann, sprich 0 und 1 oder an und aus; 
 				// das Jobaevent auch direkt festgelegt werden.
-				array('name' => 'Ventilator', 'id' =>  1, 'type' => 'switch', 'roomId' => 5, 'typeId' => 2, "value" => "turnOn"), 
-				array('name' => 'Ventilator', 'id' =>  2, 'type' => 'switch', 'roomId' => 5, 'typeId' => 2, "value" => "turnOff"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 3, 'type' => 'humidity', 'roomId' => 5, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 4, 'type' => 'temperature', 'roomId' => 5, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' =>  5, 'type' => 'humidity', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 6, 'type' => 'humidity', 'roomId' => 1, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 7, 'type' => 'temperature', 'roomId' => 1, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 8, 'type' => 'temperature', 'roomId' => 2, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 9, 'type' => 'temperature', 'roomId' => 3, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 10, 'type' => 'temperature', 'roomId' => 6, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 11, 'type' => 'temperature', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 12, 'type' => 'humidity', 'roomId' => 2, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 13, 'type' => 'humidity', 'roomId' => 3, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 14, 'type' => 'humidity', 'roomId' => 6, 'typeId' => 1, "value" => "read"),
+				array('name' => 'Pumpe', 'id' =>  1, 'type' => 'switch', 'roomId' => 1, 'typeId' => 2, "value" => "turnOn"), 
+				array('name' => 'Pumpe', 'id' =>  2, 'type' => 'switch', 'roomId' => 1, 'typeId' => 2, "value" => "turnOff"),
+				array('name' => 'Wasserstand', 'id' => 3, 'type' => 'waterlevel', 'roomId' => 1, 'typeId' => 1, "value" => "read"),
 			),
 		),
 		'ehomeBundle' => array( 

@@ -57,8 +57,7 @@ class IndexController extends AbstractActionController {
 							} else {
 								throw new \RuntimeException("Action Detection failed!");
 							}
-						} else if ($actionType == 'humidity'){ // nothing to do
-						} else if ($actionType == 'temperature'){ // nothing to do
+						} else if ($actionType == 'waterlevel'){ // nothing to do
 						} else { throw new \RuntimeException("Action Detection failed!");
 						}
 					}
@@ -84,9 +83,7 @@ class IndexController extends AbstractActionController {
 							} else {
 								throw new \RuntimeException("Action Detection failed!");
 							}
-						} else if ($actionType == 'humidity'){
-							// no event triggering found
-						} else if ($actionType == 'temperature'){
+						} else if ($actionType == 'waterlevel'){
 							// no event triggering found
 						} else {
 							throw new \RuntimeException("Action Detection failed!");
@@ -357,14 +354,13 @@ class IndexController extends AbstractActionController {
 				$formData = $roomForm->getData();
 				$room = $this->getRoomTable()->getRoom($roomId);
 				$room->setName($formData['name']);
-				$room->setHumidity($formData['humidity']);
-				$room->setTemperature($formData['temperature']);
+				$room->setWaterlevel($formData['waterlevel']);
 				if ($formData['switch'] == 1){
 					$room->setSwitch("100");
 				}else{
 					$room->setSwitch("0");
 				}
-				$this->getRoomTable()->saveRoom ( $room );
+				$this->getRoomTable()->saveRoom($room);
 				$this->createMessage("Protokoll", "Raum '" . $room->getName() . "' konfiguriert.");
 				return $this->redirect()->toRoute('home');
 			}

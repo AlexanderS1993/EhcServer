@@ -32,8 +32,7 @@ class RoomTable {
 	public function saveRoom(Room $room){
 		$data = array (
 				'name' => $room->getName(),
-				'humidity' => $room->getHumidity(),
-				'temperature' => $room->getTemperature(),
+				'waterlevel' => $room->getWaterlevel(),
 				'switch' => $room->getSwitch(),
 		);
 		$id = (int) $room->getId();

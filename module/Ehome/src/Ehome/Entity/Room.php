@@ -6,15 +6,13 @@ class Room {
 	
 	private $id;
 	private $name;
-	private $humidity;
-	private $temperature;
+	private $waterlevel;
 	private $switch;
 
 	public function exchangeArray($data) {
 		$this->id = (! empty ( $data ['id'] )) ? $data ['id'] : null;
 		$this->name = (! empty ( $data ['name'] )) ? $data ['name'] : null;
-		$this->humidity = (! empty ( $data ['humidity'] )) ? $data ['humidity'] : null;
-		$this->temperature = (! empty ( $data ['temperature'] )) ? $data ['temperature'] : null;
+		$this->waterlevel = (! empty ( $data ['waterlevel'] )) ? $data ['waterlevel'] : null;
 		$this->switch = (! empty ( $data ['switch'] )) ? $data ['switch'] : null;
 	}
 	
@@ -38,20 +36,12 @@ class Room {
 		$this->name = $name;
 	}
 	
-	public function getHumidity(){
-		return $this->humidity;
+	public function getWaterlevel(){
+		return $this->waterlevel;
 	}
 	
-	public function setHumidity($humidity){
-		$this->humidity = $humidity;
-	}
-	
-	public function getTemperature(){
-		return $this->temperature;
-	}
-	
-	public function setTemperature($temperature){
-		$this->temperature = $temperature;
+	public function setWaterlevel($waterlevvel){
+		$this->waterlevvel = $waterlevvel;
 	}
 	
 	public function getSwitch() {
