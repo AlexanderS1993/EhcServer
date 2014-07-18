@@ -65,7 +65,7 @@ Alle weiteren Raeume
 * sul: Keller besitzt HomeMatic Wassermelder und Steckdose;
 ** datenbank anlegen, create database ehcserver_sul, use ehcserver_sul: 
 * nbg: Wohnzimmer besitzt Lampe;
-** datenbank anlegen
+** datenbank anlegen bzw. klonen;
 -- -------------------------
 -- Table jobaevent:
 DROP TABLE IF EXISTS `jobaevent`;

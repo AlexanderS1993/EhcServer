@@ -57,7 +57,6 @@ class IndexController extends AbstractActionController {
 							} else {
 								throw new \RuntimeException("Action Detection failed!");
 							}
-						} else if ($actionType == 'waterlevel'){ // nothing to do
 						} else { throw new \RuntimeException("Action Detection failed!");
 						}
 					}
@@ -83,8 +82,6 @@ class IndexController extends AbstractActionController {
 							} else {
 								throw new \RuntimeException("Action Detection failed!");
 							}
-						} else if ($actionType == 'waterlevel'){
-							// no event triggering found
 						} else {
 							throw new \RuntimeException("Action Detection failed!");
 						}
@@ -354,7 +351,6 @@ class IndexController extends AbstractActionController {
 				$formData = $roomForm->getData();
 				$room = $this->getRoomTable()->getRoom($roomId);
 				$room->setName($formData['name']);
-				$room->setWaterlevel($formData['waterlevel']);
 				if ($formData['switch'] == 1){
 					$room->setSwitch("100");
 				}else{

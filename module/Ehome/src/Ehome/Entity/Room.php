@@ -12,7 +12,7 @@ class Room {
 	public function exchangeArray($data) {
 		$this->id = (! empty ( $data ['id'] )) ? $data ['id'] : null;
 		$this->name = (! empty ( $data ['name'] )) ? $data ['name'] : null;
-		$this->waterlevel = (! empty ( $data ['waterlevel'] )) ? $data ['waterlevel'] : null;
+		//$this->waterlevel = (! empty ( $data ['waterlevel'] )) ? $data ['waterlevel'] : null;
 		$this->switch = (! empty ( $data ['switch'] )) ? $data ['switch'] : null;
 	}
 	
@@ -36,13 +36,13 @@ class Room {
 		$this->name = $name;
 	}
 	
-	public function getWaterlevel(){
-		return $this->waterlevel;
-	}
+// 	public function getWaterlevel(){
+// 		return $this->waterlevel;
+// 	}
 	
-	public function setWaterlevel($waterlevvel){
-		$this->waterlevvel = $waterlevvel;
-	}
+// 	public function setWaterlevel($waterlevvel){
+// 		$this->waterlevvel = $waterlevvel;
+// 	}
 	
 	public function getSwitch() {
 		return $this->switch;

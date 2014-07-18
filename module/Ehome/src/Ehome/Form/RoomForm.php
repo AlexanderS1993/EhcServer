@@ -23,19 +23,11 @@ class RoomForm extends Form {
 				),
 				'options' => array('label' => 'Name des Raumes')
 		));
-		$this->add(array(
-				'name' => 'waterlevel',
-				'attributes' => array(
-						'type' => 'text',
-						'id' => 'waterlevel',
-						'readonly' => 'true'),
-				'options' => array('label' => 'Wasserstand')
-		));
 		$this->add ( array (
 				'type' => 'Zend\Form\Element\Radio',
 				'name' => 'switch',
 				'options' => array (
-						'label' => 'Pumpe',
+						'label' => 'Licht',
 						'value_options' => array (
 										'0' => 'Aus',
 										'1' => 'An'

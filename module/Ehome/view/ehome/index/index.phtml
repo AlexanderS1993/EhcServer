@@ -127,7 +127,6 @@ echo "</ul>"
 			<table border="1px">
 				<tr>
 					<th>Name</th>
-					<th>Wasserstand</th>
 					<th>Schalter</th>
 					<th>Aktion</th>
 				</tr>
@@ -138,12 +137,9 @@ foreach($this->rooms as $room ){
 	$showEnterRoom = false;
 	echo "<tr>";
 	echo "<td>" . $room->getName() . "</td>";
-	echo "<td style='text-align: right;'>" . $room->getWaterlevel() . "</td>";
 	if ($room->getSwitch() == 100){
 		$formActionId = 0;
 		$isRelevant = false;
-		//var_dump($room);
-		//var_dump("DEBUG" . $actionRoomId . "; ");
 		foreach ($configActions as $configAction ) {
 			$actionId = $configAction['id'];
 			$actionRoomId = $configAction ['roomId'];
