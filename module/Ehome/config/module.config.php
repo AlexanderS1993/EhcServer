@@ -3,11 +3,8 @@
 namespace Ehome;
 
 return array (
-		'ehomeGlobalOptions' => array(
-			'serverIp' => '131.188.209.50',
-			'networkIp' => 'xxx.xxx.xxx.xx', // TODO obsolete?
-		),
 		'ehomeConfig' => array(
+			'fhemServerIp' => '131.188.209.50',
 			'residentUser' => 'Rosemarie Schmidt',
 			'residentStreet' => 'Fürther Straße 246b',
 			'residentCity' => ' 90429 Nürnberg',

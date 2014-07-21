@@ -3,6 +3,7 @@
 namespace Ehome\Controller;
 
 use Zend\Debug\Debug;
+use Zend\Http\Client;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Ehome\Entity\JobaEvent;
@@ -32,8 +33,124 @@ class JsonController extends AbstractActionController {
 	}
 	// ======================================================================================================================
 	
+	public function doAction(){ // call ehcserver.local/ehomejson/do/user/pass/action/param
+		$params = $this->params()->fromRoute();
+		$user = $this->params()->fromRoute('slugA');
+		$pass = $this->params()->fromRoute('slugB');
+		// check for valid request
+		$res = $this->authenticate($user, $pass);
+		if ($res){
+			$actionId = $this->params()->fromRoute('slugC');
+			$config = $this->getServiceLocator()->get('config');
+			$ehomeConfig = $config['ehomeConfig'];
+			$ehomeConfigActions = $ehomeConfig['action'];
+			switch ($actionId){
+				case 0: // go to home
+					return new JsonModel(array('connection' => 'ok'));
+					//break;
+				case 1: // turn switch on in room infotainment, see first defined action
+					foreach($ehomeConfigActions as $ehomeConfigAction){
+						if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
+							$roomId = $ehomeConfigAction['roomId'];
+							$actionType = $ehomeConfigAction['type'];
+							$actionValue = $ehomeConfigAction['value'];
+							// querie detection
+							if ($actionType == 'switch') { // TODO use const vars!
+								if ($actionValue == 'turnOn') {
+									$room = $this->getRoomTable ()->getRoom ( $roomId );
+									$room->setSwitch ( 100 );
+									$this->getRoomTable ()->saveRoom ( $room );
+									$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+									// TODO think about exception handling to detect if fhem call was successful
+									// TODO create method to prevent code duplication
+									$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=Infotainment';
+									$client = new Client();
+									$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+									$client->setUri($uri);
+									$result = $client->send();
+									$body = $result->getBody();
+									$msg = "Aktion " . $actionId . " triggered.";
+									return new JsonModel(array('connection' => 'ok', 'message' => $msg));
+								} else if ($actionValue == 'turnOff'){
+									$room = $this->getRoomTable()->getRoom($roomId);
+									$room->setSwitch(0);
+									$this->getRoomTable()->saveRoom($room);
+									$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+									$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+									$client = new Client();
+									$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+									$client->setUri($uri);
+									$result = $client->send();
+									$body = $result->getBody();
+									$msg = "Aktion " . $actionId . " triggered.";
+									return new JsonModel(array('connection' => 'ok', 'message' => $msg));
+								} else {
+									throw new \RuntimeException("Action Detection failed!");
+								}
+							} else if ($actionType == 'humidity'){ // nothing to do
+							} else if ($actionType == 'temperature'){ // nothing to do
+							} else { throw new \RuntimeException("Action Detection failed!");
+							}
+						}
+					}
+					break;
+				case 2: // turn switch off in room infotainment, see implicitely defined action related to second state of action 1
+					// get relevant data from config and trigger saveRoom()
+					foreach($ehomeConfigActions as $ehomeConfigAction){
+						if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
+							$roomId = $ehomeConfigAction['roomId'];
+							$actionType = $ehomeConfigAction['type'];
+							$actionValue = $ehomeConfigAction['value'];
+							// querie detection
+							if ($actionType == 'switch'){ // TODO use const vars!
+								if ($actionValue == 'turnOn'){
+									$room = $this->getRoomTable()->getRoom($roomId);
+									$room->setSwitch(100);
+									$this->getRoomTable()->saveRoom($room);
+									$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=Infotainment';
+									$client = new Client();
+									$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+									$client->setUri($uri);
+									$result = $client->send();
+									$body = $result->getBody();
+									$msg = "Aktion " . $actionId . " triggered.";
+									return new JsonModel(array('connection' => 'ok', 'message' => $msg));
+								} else if ($actionValue == 'turnOff'){
+									$room = $this->getRoomTable()->getRoom($roomId);
+									$room->setSwitch(0);
+									$this->getRoomTable()->saveRoom($room);
+									$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+									$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+									$client = new Client();
+									$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+									$client->setUri($uri);
+									$result = $client->send();
+									$body = $result->getBody();
+									$msg = "Aktion " . $actionId . " triggered.";
+									return new JsonModel(array('connection' => 'ok', 'message' => $msg));
+								} else {
+									throw new \RuntimeException("Action Detection failed!");
+								}
+							} else if ($actionType == 'humidity'){
+								// no event triggering found
+							} else if ($actionType == 'temperature'){
+								// no event triggering found
+							} else {
+								throw new \RuntimeException("Action Detection failed!");
+							}
+						}
+					}
+					break;
+				default:
+					return new JsonModel(array('connection' => 'ok'));
+					//break;
+			}
+		} else {
+			return new JsonModel(array('connection' => 'false'));
+		}
+	}
 	
-	
+	// TODO implement do-Action method
 	public function indexAction(){ // call .../ehomejson/user/pass/
 		return new JsonModel(array('connection' => 'ok'));
 	}

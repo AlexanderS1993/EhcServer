@@ -44,16 +44,32 @@ class IndexController extends AbstractActionController {
 						$roomId = $ehomeConfigAction['roomId'];
 						$actionType = $ehomeConfigAction['type'];
 						$actionValue = $ehomeConfigAction['value'];
-						// querie detection
-						if ($actionType == 'switch'){ // TODO use const vars!
-							if ($actionValue == 'turnOn'){
-								$room = $this->getRoomTable()->getRoom($roomId);
-								$room->setSwitch(100);
-								$this->getRoomTable()->saveRoom($room);
+							// querie detection
+						if ($actionType == 'switch') { // TODO use const vars!
+							if ($actionValue == 'turnOn') {
+								$room = $this->getRoomTable ()->getRoom ( $roomId );
+								$room->setSwitch ( 100 );
+								$this->getRoomTable ()->saveRoom ( $room );
+								$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+								// TODO think about exception handling to detect if fhem call was successful
+								// TODO create method to prevent code duplication
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=Infotainment';
+								$client = new Client();
+								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+								$client->setUri($uri);
+								$result = $client->send();
+								$body = $result->getBody();
 							} else if ($actionValue == 'turnOff'){
 								$room = $this->getRoomTable()->getRoom($roomId);
 								$room->setSwitch(0);
 								$this->getRoomTable()->saveRoom($room);
+								$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+								$client = new Client();
+								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+								$client->setUri($uri);
+								$result = $client->send();
+								$body = $result->getBody();
 							} else {
 								throw new \RuntimeException("Action Detection failed!");
 							}
@@ -77,10 +93,23 @@ class IndexController extends AbstractActionController {
 								$room = $this->getRoomTable()->getRoom($roomId);
 								$room->setSwitch(100);
 								$this->getRoomTable()->saveRoom($room);
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=Infotainment';
+								$client = new Client();
+								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+								$client->setUri($uri);
+								$result = $client->send();
+								$body = $result->getBody();
 							} else if ($actionValue == 'turnOff'){
 								$room = $this->getRoomTable()->getRoom($roomId);
 								$room->setSwitch(0);
 								$this->getRoomTable()->saveRoom($room);
+								$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+								$client = new Client();
+								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+								$client->setUri($uri);
+								$result = $client->send();
+								$body = $result->getBody();
 							} else {
 								throw new \RuntimeException("Action Detection failed!");
 							}
@@ -108,9 +137,25 @@ class IndexController extends AbstractActionController {
 	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
 		
 		// TODO current use case under development:
-		// ...
 		
-		// use case: fetch CO2-data
+		// use case turn ventilator off
+		Debug::dump("BP0");
+		$config = $this->getServiceLocator()->get('config');
+		$ehomeConfig = $config['ehomeConfig'];
+		$fhemServerIp = $ehomeConfig['fhemServerIp'];
+		$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+		$client = new Client();
+		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+		$client->setUri($uri);
+		$result = $client->send();
+		$body = $result->getBody();
+		Debug::dump("BP1");
+		
+		
+		
+		// use case: fetch CO2-data // TODO
+		// URL http://169.254.1.1/ GassensorAdHoc 
+		// besser direkt via Netgear Router einhaengen
 		// ...
 		
 		// use case: fetch Jawbone Up data
@@ -124,15 +169,7 @@ class IndexController extends AbstractActionController {
 		// use case: trigger smart switch - works
 		// 		$config = $this->getServiceLocator()->get('config');
 		// 		$ehcGlobalOptions = $config['ehcGlobalOptions'];
-		// 		$ip = $ehcGlobalOptions['serverIp'];
-		// 		$uri = 'http://' . $ip . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
-		// 		Debug::dump("DEBUG: " . $uri);
-		// 		$client = new Client();
-		// 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-		// 		$client->setUri($uri);
-		// 		$result = $client->send();
-		// 		$body = $result->getBody();
-		// 		Debug::dump("DEBUG: " . $body);
+		// 		
 		// use case: delete all non-health-messages
 		// 		$events = $this->getEventTable()->fetchAll();
 		// 		$idsToDelete = array();
@@ -262,7 +299,7 @@ class IndexController extends AbstractActionController {
 		// 				'id' => $id,
 		// 				'form' => $form
 		// 		);
-		//return new ViewModel();
+		return new ViewModel();
 		//return $this->redirect()->toRoute('home');
 	}
 	// ======================================================================================================================
