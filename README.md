@@ -24,7 +24,7 @@ Philosophie und Strategie
 -------------------------
 Der master-Branch repraesentiert die generische Version. Um Erfahrungswerte zu sammeln,
 existieren pro Instanz einer intelligenten Wohnung eigene Branches. Pro Instanz wird 
-eine eigene Datenbank angelegt.
+eine eigene Datenbank angelegt. test
 
 Anleitung zum Anpassen an eine neue Umgebung
 --------------------------------------------
