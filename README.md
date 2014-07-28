@@ -24,7 +24,14 @@ Philosophie und Strategie
 -------------------------
 Der master-Branch repraesentiert die generische Version. Um Erfahrungswerte zu sammeln,
 existieren pro Instanz einer intelligenten Wohnung eigene Branches. Pro Instanz wird 
-eine eigene Datenbank angelegt. test
+eine eigene Datenbank angelegt. Test
+
+Einrichtung Server
+------------------
+fhem, ubuntu 14.04;
+fhem: deb-Paket von Website holen;
+ubuntu: LAMP-Stack holen; verifizieren;
+ubuntu: virtuellen host festlegen;
 
 Anleitung zum Anpassen an eine neue Umgebung
 --------------------------------------------
@@ -60,6 +67,3 @@ Entwicklernotizen
 Infotainment besitzt HomeMatic Temperatur, Luftfeuchtigkeitsmesser, schlaue Steckdose (Ventilator), CO2-Sensor;
 Hiwiraum besitzt Luftfeuchtigkeitsmesser, Temperatur, schlaue Steckdose (Licht1), alles ZWave;
 Alle weiteren Raeume 
-
-
-
