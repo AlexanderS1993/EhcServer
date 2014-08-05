@@ -61,5 +61,7 @@ Infotainment besitzt HomeMatic Temperatur, Luftfeuchtigkeitsmesser, schlaue Stec
 Hiwiraum besitzt Luftfeuchtigkeitsmesser, Temperatur, schlaue Steckdose (Licht1), alles ZWave;
 Alle weiteren Raeume 
 
+Test
+
 
 
