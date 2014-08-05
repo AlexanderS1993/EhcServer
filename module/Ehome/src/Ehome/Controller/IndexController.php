@@ -140,15 +140,15 @@ class IndexController extends AbstractActionController {
 		
 		// use case turn ventilator off
 		Debug::dump("BP0");
-		$config = $this->getServiceLocator()->get('config');
-		$ehomeConfig = $config['ehomeConfig'];
-		$fhemServerIp = $ehomeConfig['fhemServerIp'];
-		$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
-		$client = new Client();
-		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-		$client->setUri($uri);
-		$result = $client->send();
-		$body = $result->getBody();
+// 		$config = $this->getServiceLocator()->get('config');
+// 		$ehomeConfig = $config['ehomeConfig'];
+// 		$fhemServerIp = $ehomeConfig['fhemServerIp'];
+// 		$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+// 		$client = new Client();
+// 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+// 		$client->setUri($uri);
+// 		$result = $client->send();
+// 		$body = $result->getBody();
 		Debug::dump("BP1");
 		
 		

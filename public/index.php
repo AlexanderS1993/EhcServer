@@ -15,7 +15,8 @@ $includePath = APPLICATION_PATH . '/../library' . PATH_SEPARATOR . get_include_p
 set_include_path($includePath);
 
 // Set environment variable
-putenv('ZF2_PATH=/home/jay/workspacephp/EhcServer/vendor/zendframework/zendframework/library');
+// putenv('ZF2_PATH=/home/jay/workspacephp/EhcServer/vendor/zendframework/zendframework/library');
+putenv('ZF2_PATH=/home/alskibbe/workspacephp/EhcServer/vendor/zendframework/zendframework/library');
 putenv('APPLICATION_ENV=development');
 
 // Error reporting
