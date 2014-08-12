@@ -13,6 +13,20 @@ Einige Einstellungen befinden sich in den Dateien der config-Verzeichnisse des Z
 Datenbank
 ---------
 Es existieren die Tabellen user, jobaevent, room. 
+In der Tabelle jobaevent existieren alle Nachrichten des Systems.
+Eine Nachricht hat einen Typ, der diese genau einem Bereich zuordnet.
+health fuer den Gesundheitsbereich, message fuer Systemnachrichen.
+Es kann sein, dass durch das Name-Attribut Subkategorien gebildet werden, etwa bei Warnung als Subkategorie von message.
+Aktuell vorkommende Name-Type-Paare sind:
+energy - Amperemessung;
+energy - Voltmessung;
+health - Blutdruckmessung;
+health - Blutzuckermessung;
+health - Gewichtsmessung;
+health - Puls;
+message - Protokoll;
+message - Warnung; 
+Des Weiteren gibt es den Status done, hier steht die 0 fuer Achtung und die 1 fuer Ok;
 
 MVC
 ---
@@ -20,9 +34,26 @@ JobaEvent repraesentiert Mitteilungen. Das Attribut type regelt, welche Art die
 Mitteilung ist. Im index-View werden die Nachrichten gemaess der Typen in Listen 
 gebuendelt. Aktuell existieren Log-Nachrichten, Gesundheitsnachrichten und Warnungen.
 
+Konventionen fuer Entwickler
+----------------------------
+Fuer Feedback sind normalerweise FlashMessages zu nutzen, siehe IndexController indexAction() accessDenied;
+Zeichenketten sollten in der Konfigurationsdatei im ehomeBundle-Array platziert werden.
+
 Snippets
 --------
-Webserver-Log-Datei: tail -f /var/log/apache2/error.log
+Apache-2-Error-Datei anzeigen: tail -f /var/log/apache2/error.log 
+Anmelden am Datenbankserver: mysql -u [user] -p [pass] 
+Datenbanken anzeigen: show databases; 
+Datenbank anwaehlen: use [database]; 
+Datenbank kopieren in shell: mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -p[password] db2 
+Tabellen anzeigen: show tables; 
+Tabelleneintraege anzeigen: select * from [table]; 
+Tabelleneintraege aktualisieren: update room set humidity=20 where id=1; 
+Tabelleneintrag einpflegen: insert into jobaevent (name, value, type, done) values ('warnung', 'eine warnung', 'message', 0); 
+Tabellenspalte hinzufuegen (add) / entfernen (drop column) / aendern (change): alter table room drop column lightone; alter table room change column lighttwo switch int(11); 
+Tabellenspaltenstruktur anzeigen: show columns from room; 
+Eclipse-PHP-Debugging (XDebug-Installation: coderblog.de/how-to-install-use-configure-xdebug-ubuntu/; 
+XDebug-Eclipse-Verbindung, localhost und leeren Restpfad sollte auf index-Action verweisen) 
 
 Abhaengigkeiten
 ---------------
@@ -53,6 +84,11 @@ Deployment
 * Datenbank bauen bzw. Dump einspielen, Namenskonvention ehcserver_branchname;
 * Automatisierte Tests starten;
 * Manuelle Tests ausfuehren;
+
+Manuelles Testprotokoll
+-----------------------
+* Login in Anwendung;
+* Anschalten des Ventilators;
 
 Umgebungen
 ----------

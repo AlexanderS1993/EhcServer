@@ -305,7 +305,7 @@ class IndexController extends AbstractActionController {
 	// ======================================================================================================================
 	
 	public function indexAction(){
-		if (! $this->zfcUserAuthentication ()->hasIdentity ()) { // check for valid session
+		if (! $this->zfcUserAuthentication()->hasIdentity ()) { // check for valid session
 			$this->createFlashMessage('accessDenied');
 			return $this->redirect ()->toRoute ( static::ROUTE_LOGIN );
 		}

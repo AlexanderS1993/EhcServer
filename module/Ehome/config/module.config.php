@@ -25,8 +25,8 @@ return array (
 				// 1 = es ist ein read-only sensor, etwa die Luftfeuchtigkeit;
 				// 2 = es ist eine Komponente, die genau zwei Zustaende annehmen kann, sprich 0 und 1 oder an und aus; 
 				// das Jobaevent auch direkt festgelegt werden.
-				array('name' => 'Ventilator', 'id' =>  1, 'type' => 'switch', 'roomId' => 5, 'typeId' => 2, "value" => "turnOn"), 
-				array('name' => 'Ventilator', 'id' =>  2, 'type' => 'switch', 'roomId' => 5, 'typeId' => 2, "value" => "turnOff"),
+				array('name' => 'Ventilator', 'id' =>  1, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOn"), 
+				array('name' => 'Ventilator', 'id' =>  2, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOff"),
 				array('name' => 'Luftfeuchtigkeit', 'id' => 3, 'type' => 'humidity', 'roomId' => 5, 'typeId' => 1, "value" => "read"),
 				array('name' => 'Temperatur', 'id' => 4, 'type' => 'temperature', 'roomId' => 5, 'typeId' => 1, "value" => "read"),
 				array('name' => 'Luftfeuchtigkeit', 'id' =>  5, 'type' => 'humidity', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
