@@ -54,3 +54,9 @@ Deployment
 * Automatisierte Tests starten;
 * Manuelle Tests ausfuehren;
 
+Umgebungen
+----------
+* Master: (ehome-Umgebung)
+* Default
+* Sul
+

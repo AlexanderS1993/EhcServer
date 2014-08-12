@@ -19,28 +19,143 @@ class IndexController extends AbstractActionController {
 	protected $eventTable;
 	protected $roomTable;
 	const ROUTE_LOGIN = 'zfcuser/login';
+	const ROUTE_HOME = 'home';
+	const CONFIG_KEY_ROOM = "room";
+	const CONFIG_KEY_ACTION = "action";
+	
+	public function doAction(){
+		if (! $this->zfcUserAuthentication()->hasIdentity()) { // check for valid session
+			$this->createFlashMessage('accessDenied');
+			return $this->redirect()->toRoute(static::ROUTE_LOGIN);
+		}
+		$actionId = $this->params()->fromRoute('id');
+		$route = static::ROUTE_HOME;
+		$config = $this->getServiceLocator()->get('config');
+		$ehomeConfig = $config['ehomeConfig'];
+		$ehomeConfigActions = $ehomeConfig['action'];
+		switch ($actionId){
+			case 0: // go to home
+				$this->createFlashMessage('redirectToHome');
+				$route = static::ROUTE_HOME;
+				break;
+			case 1: // turn switch on in room infotainment, see first defined action
+				foreach($ehomeConfigActions as $ehomeConfigAction){
+					if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
+						$roomId = $ehomeConfigAction['roomId'];
+						$actionType = $ehomeConfigAction['type'];
+						$actionValue = $ehomeConfigAction['value'];
+							// querie detection
+						if ($actionType == 'switch') { // TODO use const vars!
+							if ($actionValue == 'turnOn') {
+								$room = $this->getRoomTable ()->getRoom ( $roomId );
+								$room->setSwitch ( 100 );
+								$this->getRoomTable ()->saveRoom ( $room );
+								$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+								// TODO think about exception handling to detect if fhem call was successful
+								// TODO create method to prevent code duplication
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=Infotainment';
+								$client = new Client();
+								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+								$client->setUri($uri);
+								$result = $client->send();
+								$body = $result->getBody();
+							} else if ($actionValue == 'turnOff'){
+								$room = $this->getRoomTable()->getRoom($roomId);
+								$room->setSwitch(0);
+								$this->getRoomTable()->saveRoom($room);
+								$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+								$client = new Client();
+								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+								$client->setUri($uri);
+								$result = $client->send();
+								$body = $result->getBody();
+							} else {
+								throw new \RuntimeException("Action Detection failed!");
+							}
+						} else if ($actionType == 'humidity'){ // nothing to do
+						} else if ($actionType == 'temperature'){ // nothing to do
+						} else { throw new \RuntimeException("Action Detection failed!");
+						}
+					}
+				}
+				break;
+			case 2: // turn switch off in room infotainment, see implicitely defined action related to second state of action 1
+				// get relevant data from config and trigger saveRoom()
+				foreach($ehomeConfigActions as $ehomeConfigAction){
+					if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
+						$roomId = $ehomeConfigAction['roomId'];
+						$actionType = $ehomeConfigAction['type'];
+						$actionValue = $ehomeConfigAction['value'];
+						// querie detection
+						if ($actionType == 'switch'){ // TODO use const vars!
+							if ($actionValue == 'turnOn'){
+								$room = $this->getRoomTable()->getRoom($roomId);
+								$room->setSwitch(100);
+								$this->getRoomTable()->saveRoom($room);
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=Infotainment';
+								$client = new Client();
+								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+								$client->setUri($uri);
+								$result = $client->send();
+								$body = $result->getBody();
+							} else if ($actionValue == 'turnOff'){
+								$room = $this->getRoomTable()->getRoom($roomId);
+								$room->setSwitch(0);
+								$this->getRoomTable()->saveRoom($room);
+								$fhemServerIp = $ehomeConfig ['fhemServerIp'];
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+								$client = new Client();
+								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+								$client->setUri($uri);
+								$result = $client->send();
+								$body = $result->getBody();
+							} else {
+								throw new \RuntimeException("Action Detection failed!");
+							}
+						} else if ($actionType == 'humidity'){
+							// no event triggering found
+						} else if ($actionType == 'temperature'){
+							// no event triggering found
+						} else {
+							throw new \RuntimeException("Action Detection failed!");
+						}
+					}
+				}
+				break;
+			default:
+				$this->createFlashMessage('redirectToHome');
+				$route = static::ROUTE_HOME;
+				break;
+		}
+		// redirect
+		return $this->redirect()->toRoute($route);
+	}
 	
 	// ========================================================================================================
 	// DEVELOPMENT AREA Webapp
-	public function tempAction() { // call: http://ehcserver.local/temp
+	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
 		
 		// TODO current use case under development:
-		// use case: trigger smart switch
-		$config = $this->getServiceLocator()->get('config');
-		$ehcGlobalOptions = $config['ehcGlobalOptions'];
-		$ip = $ehcGlobalOptions['serverIp'];
-		$uri = 'http://' . $ip . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
-		//$uri = 'http://192.168.1.1:80/index.htm';
-		//$uri = 'http://www.google.de';
-		Debug::dump("DEBUG: " . $uri);
-		$client = new Client();
-		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-		$client->setUri($uri);
-		$result = $client->send();
-		$body = $result->getBody();
-		Debug::dump("DEBUG: " . $body);
 		
-		// use case: fetch CO2-data
+		// use case turn ventilator off
+		Debug::dump("BP0");
+// 		$config = $this->getServiceLocator()->get('config');
+// 		$ehomeConfig = $config['ehomeConfig'];
+// 		$fhemServerIp = $ehomeConfig['fhemServerIp'];
+// 		$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+// 		$client = new Client();
+// 		$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+// 		$client->setUri($uri);
+// 		$result = $client->send();
+// 		$body = $result->getBody();
+		Debug::dump("BP1");
+		
+		
+		
+		// use case: fetch CO2-data // TODO
+		// URL http://169.254.1.1/ GassensorAdHoc 
+		// besser direkt via Netgear Router einhaengen
 		// ...
 		
 		// use case: fetch Jawbone Up data
@@ -51,6 +166,10 @@ class IndexController extends AbstractActionController {
 		
 		
 		// TODO following use cases are working ... embed in webapp
+		// use case: trigger smart switch - works
+		// 		$config = $this->getServiceLocator()->get('config');
+		// 		$ehcGlobalOptions = $config['ehcGlobalOptions'];
+		// 		
 		// use case: delete all non-health-messages
 		// 		$events = $this->getEventTable()->fetchAll();
 		// 		$idsToDelete = array();
@@ -180,13 +299,14 @@ class IndexController extends AbstractActionController {
 		// 				'id' => $id,
 		// 				'form' => $form
 		// 		);
-		//return new ViewModel();
+		return new ViewModel();
 		//return $this->redirect()->toRoute('home');
 	}
 	// ======================================================================================================================
 	
 	public function indexAction(){
 		if (! $this->zfcUserAuthentication ()->hasIdentity ()) { // check for valid session
+			$this->createFlashMessage('accessDenied');
 			return $this->redirect ()->toRoute ( static::ROUTE_LOGIN );
 		}
 		// scenario: submit button
@@ -194,148 +314,22 @@ class IndexController extends AbstractActionController {
 		$email = $user->getEmail();
 		$rooms = $this->getRoomTable()->fetchAll();
 		$events = $this->getEventTable()->fetchAll();
-		$lightoneBath = false;
-		$lighttwoBath = false;
-		$lightoneKitchen = false;
-		$lighttwoKitchen = false;
-		$lightoneLivingRoom = false;
-		$lighttwoLivingRoom = false;
-		$rooms->buffer();
-		foreach ($rooms as $room){
-			$id = $room->getId ();
-			if ($id == 3){
-				$lightoneBathValue = $room->getLightone();
-				$lighttwoBathValue = $room->getLighttwo();
-				if ($lightoneBathValue == 100) {
-					$lightoneBath = true;
-				}
-				if ($lighttwoBathValue == 100) {
-					$lighttwoBath = true;
-				}
-			} else if ($id == 1) {
-				$lightoneKitchenValue = $room->getLightone();
-				$lighttwoKitchenValue = $room->getLighttwo();
-				if ($lightoneKitchenValue == 100) {
-					$lightoneKitchen = true;
-				}
-				if ($lighttwoKitchenValue == 100) {
-					$lighttwoKitchen = true;
-				}
-			} else if ($id == 2) {
-				$lightoneLivingRoomValue = $room->getLightone();
-				$lighttwoLivingRoomValue = $room->getLighttwo();
-				if ($lightoneLivingRoomValue == 100) {
-					$lightoneLivingRoom = true;
-				}
-				if ($lighttwoLivingRoomValue == 100) {
-					$lighttwoLivingRoom = true;
-				}
-			} else {
-			}
-		}
 		$config = $this->getServiceLocator()->get('Config');
-		$jobaGlobalOptions = $config['jobaGlobalOptions'];
-		$reduceToLocal = $jobaGlobalOptions['localNetwork'];
 		$ehomeConfig = $config['ehomeConfig'];
-		$floorplanHeader = $ehomeConfig['residentUser'] . ", " . $ehomeConfig['residentStreet'] . ", " .  $ehomeConfig['residentCity'];
 		return new ViewModel ( array (
 				'rooms' => $rooms,
 				'events' => $events,
 				'useremail' => $email,
-				'lightoneBath' => $lightoneBath,
-				'lighttwoBath' => $lighttwoBath,
-				'lightoneKitchen' => $lightoneKitchen,
-				'lighttwoKitchen' => $lighttwoKitchen,
-				'lightoneLivingRoom' => $lightoneLivingRoom,
-				'lighttwoLivingRoom' => $lighttwoLivingRoom,
-				'localNetwork' => $reduceToLocal,
-				'floorplanHeader' => $floorplanHeader
+				'ehomeConfig' => $ehomeConfig,
 		) );
 	}
 	
-	public function ehometestAction(){
+	public function ehometestAction(){ // show test page, i.e. for user experience tests
 		return new ViewModel();
 	}
 	
 	public function commentAction(){
 		return $this->redirect()->toRoute('contact');
-	}
-	
-	public function togglelightoneAction(){
-		$roomId = (int) $this->params()->fromRoute('id', 0);
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$state = $room->getLightone();
-		$config = $this->getServiceLocator()->get('Config');
-		$jobaGlobalOptions = $config['jobaGlobalOptions'];
-		$ip = $jobaGlobalOptions['networkIp'];
-		if ($state == "100"){
-			$room->setLightone("0");
-			// call fhem url
-			$client = new Client();
-			$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-			$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set%20steckdose%20off&room=Infotainment';
-			$client->setUri($uri);
-			$result = $client->send();
-			$body = $result->getBody();
-			$this->createMessage("Protokoll", "Licht Nummer Eins im Raum '" . $room->getName() . "' ausgeschaltet.");
-		} else {
-			$room->setLightone("100");
-			// call fhem url
-			$client = new Client();
-			$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-			$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set%20steckdose%20on&room=Infotainment';
-			$client->setUri($uri);
-			$result = $client->send();
-			$body = $result->getBody();
-			$this->createMessage("Protokoll", "Licht Nummer Eins im Raum '" . $room->getName() . "' eingeschaltet.");
-		}
-		$this->getRoomTable()->saveRoom($room);
-		return $this->redirect()->toRoute('home'); // TODO create const
-	}
-	
-	public function togglelighttwoAction(){
-		$roomId = (int) $this->params()->fromRoute('id', 0);
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$state = $room->getLighttwo();
-		if ($state == "100"){
-			$room->setLighttwo("0");
-			$this->createMessage("Protokoll", "Licht Nummer Zwei im Raum '" . $room->getName() . "' ausgeschaltet.");
-		} else {
-			$room->setLighttwo("100");
-			$this->createMessage("Protokoll", "Licht Nummer Eins im Raum '" . $room->getName() . "' eingeschaltet.");
-		}
-		$this->getRoomTable()->saveRoom($room);
-		return $this->redirect()->toRoute('home'); // TODO create const
-	}
-	
-	public function togglewindowAction(){
-		$roomId = (int) $this->params()->fromRoute('id', 0);
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$state = $room->getWindow();
-		if ($state == "1"){
-			$room->setWindow("0");
-			$this->createMessage("Protokoll", "Fenster im Raum '" . $room->getName() . "' geschlossen.");
-		} else {
-			$room->setWindow("1");
-			$this->createMessage("Protokoll", "Fenster im Raum '" . $room->getName() . "' geöffnet.");
-		}
-		$this->getRoomTable()->saveRoom($room);
-		return $this->redirect()->toRoute('home'); // TODO create const
-	}
-	
-	public function toggledoorAction(){
-		$roomId = (int) $this->params()->fromRoute('id', 0);
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$state = $room->getDoor();
-		if ($state == "1"){
-			$room->setDoor("0");
-			$this->createMessage("Protokoll", "Türe im Raum '" . $room->getName() . "' geschlossen.");
-		} else {
-			$room->setDoor("1");
-			$this->createMessage("Protokoll", "Türe im Raum '" . $room->getName() . "' geöffnet.");
-		}
-		$this->getRoomTable()->saveRoom($room);
-		return $this->redirect()->toRoute('home'); // TODO create const
 	}
 	
 	public function togglemessageAction(){
@@ -386,7 +380,7 @@ class IndexController extends AbstractActionController {
 			}
 		}
 		return new ViewModel(array(
-				'form' => $eventForm,
+			'form' => $eventForm,
 		));
 	}
 	
@@ -402,48 +396,23 @@ class IndexController extends AbstractActionController {
 				$room->setName($formData['name']);
 				$room->setHumidity($formData['humidity']);
 				$room->setTemperature($formData['temperature']);
-				if ($formData['lightone'] == 1){
-					$room->setLightone("100");
+				if ($formData['switch'] == 1){
+					$room->setSwitch("100");
 				}else{
-					$room->setLightone("0");
+					$room->setSwitch("0");
 				}
-				if ($formData['lighttwo'] == 1){
-					$room->setLighttwo("100");
-				} else {
-					$room->setLighttwo ( "0" );
-				}
-				$room->setWindow($formData['window']);
-				$room->setDoor($formData['door']);
 				$this->getRoomTable()->saveRoom ( $room );
 				$this->createMessage("Protokoll", "Raum '" . $room->getName() . "' konfiguriert.");
-				return $this->redirect ()->toRoute ( 'home' );
+				return $this->redirect()->toRoute('home');
 			}
 		} else { // show form
-			$room = $this->getRoomTable ()->getRoom ( $roomId );
-			$roomForm->bind( $room );
-			$lightOneValue = $room->getLightone();
-			if ($lightOneValue == '100') {
-				$roomForm->get ( 'lightone' )->setValue ( 1 );
+			$room = $this->getRoomTable()->getRoom($roomId);
+			$roomForm->bind($room);
+			$switchValue = $room->getSwitch();
+			if ($switchValue == '100') {
+				$roomForm->get('switch')->setValue(1);
 			} else {
-				$roomForm->get ( 'lightone' )->setValue ( 0 );
-			}
-			$lightTwoValue = $room->getLighttwo ();
-			if ($lightTwoValue == '100'){
-            	$roomForm->get('lighttwo')->setValue(1);
-            } else {
-            	$roomForm->get('lighttwo')->setValue(0);
-            }
-            $windowValue = $room->getWindow();
-            if ($windowValue == '1') {
-            	$roomForm->get('window')->setValue (1);
-            } else {
-            	$roomForm->get('window')->setValue (0);
-            }
-		    $doorValue = $room->getDoor();
-            if ($doorValue == '1') {
-            	$roomForm->get('door')->setValue(1);
-            } else {
-            	$roomForm->get('door')->setValue ( 0 );
+				$roomForm->get('switch')->setValue(0);
 			}
 		}
 		return new ViewModel ( array (
@@ -481,6 +450,17 @@ class IndexController extends AbstractActionController {
 		$message->setType("message");
 		$message->setDone(0);
 		$this->getEventTable()->saveEvent($message);
+	}
+	
+	private function createFlashMessage($key){
+		$config = $this->getServiceLocator()->get('config');
+		$bundle = $config['ehomeBundle'];
+		$msg = $bundle[$key];
+		// if key is not found, show key as string
+		if ($msg == ""){
+			$msg = $key;
+		}
+		$this->flashMessenger()->addMessage($msg);
 	}
 }
 ?>
