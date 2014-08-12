@@ -88,7 +88,11 @@ Deployment
 Manuelles Testprotokoll
 -----------------------
 * Login in Anwendung;
-* Anschalten des Ventilators;
+* Anschalten des Ventilators von Startseite;
+* Anschalten des Ventialtors aus Detailsicht (Raum);
+* Testen der FlashMessages beim unberechtigten Index-Seiten-Zugriffs;
+* Wegklicken der zweiten erzeugten Warnungsbox (Test toggleMessage());
+* Test der JSON-Schnittstelle mit Client;
 
 Umgebungen
 ----------

@@ -27,60 +27,28 @@ class RoomForm extends Form {
 				'name' => 'humidity',
 				'attributes' => array(
 						'type' => 'text',
-						'id' => 'humidity'),
+						'id' => 'humidity',
+						'readonly' => 'true'),
 				'options' => array('label' => 'Luftfeuchtigkeit')
 		));
 		$this->add(array(
 				'name' => 'temperature',
 				'attributes' => array(
 						'type' => 'text',
-						'id' => 'temperature'),
+						'id' => 'temperature',
+						'readonly' => 'true'),
 				'options' => array('label' => 'Temperatur')
 		));
-		// radiobuttons
 		$this->add ( array (
 				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'lightone',
+				'name' => 'switch',
 				'options' => array (
-						'label' => 'Licht 1',
+						'label' => 'Schalter',
 						'value_options' => array (
-								'0' => 'Aus',
-								'1' => 'An'
+										'0' => 'Aus',
+										'1' => 'An'
+								)
 						)
-				)
-		) );
-		$this->add ( array (
-				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'lighttwo',
-				'options' => array (
-						'label' => 'Licht 2',
-						'value_options' => array (
-								'0' => 'Aus',
-								'1' => 'An'
-						)
-				)
-		) );
-		$this->add ( array (
-				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'window',
-				'options' => array (
-						'label' => 'Fenster',
-						'value_options' => array (
-								'0' => 'Zu',
-								'1' => 'Auf'
-						)
-				)
-		) );
-		$this->add ( array (
-				'type' => 'Zend\Form\Element\Radio',
-				'name' => 'door',
-				'options' => array (
-						'label' => 'Tuere',
-						'value_options' => array (
-								'0' => 'Zu',
-								'1' => 'Auf'
-						)
-				)
 		) );
 		$this->add(array( // submit;
 				'name' => 'submit',

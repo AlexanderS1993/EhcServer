@@ -38,7 +38,7 @@ class IndexController extends AbstractActionController {
 				$this->createFlashMessage('redirectToHome');
 				$route = static::ROUTE_HOME;
 				break;
-			case 1: // turn switch on in room infotainment, see first defined action
+			case 1: // turn switch on in room hiwiraum, see first defined action
 				foreach($ehomeConfigActions as $ehomeConfigAction){
 					if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
 						$roomId = $ehomeConfigAction['roomId'];
@@ -80,7 +80,7 @@ class IndexController extends AbstractActionController {
 					}
 				}
 				break;
-			case 2: // turn switch off in room infotainment, see implicitely defined action related to second state of action 1
+			case 2: // turn switch off in room hiwiraum, see implicitely defined action related to second state of action 1
 				// get relevant data from config and trigger saveRoom()
 				foreach($ehomeConfigActions as $ehomeConfigAction){
 					if ($ehomeConfigAction['id'] == $actionId){ // match: get data for query
@@ -328,9 +328,10 @@ class IndexController extends AbstractActionController {
 		return new ViewModel();
 	}
 	
-	public function commentAction(){
-		return $this->redirect()->toRoute('contact');
-	}
+// TODO use contact form!
+// 	public function commentAction(){
+// 		return $this->redirect()->toRoute('contact');
+// 	}
 	
 	public function togglemessageAction(){
 		$messageId = (int) $this->params()->fromRoute('id', 0);
@@ -396,12 +397,30 @@ class IndexController extends AbstractActionController {
 				$room->setName($formData['name']);
 				$room->setHumidity($formData['humidity']);
 				$room->setTemperature($formData['temperature']);
+				$config = $this->getServiceLocator()->get('config');
+				$ehomeConfig = $config['ehomeConfig'];
+				$fhemServerIp = $ehomeConfig ['fhemServerIp'];
 				if ($formData['switch'] == 1){
 					$room->setSwitch("100");
+					// do action for switch turnOn
+					$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=Infotainment';
+					$client = new Client();
+					$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+					$client->setUri($uri);
+					$result = $client->send();
+					$body = $result->getBody();
 				}else{
 					$room->setSwitch("0");
+					// do action for switch turnOff
+					$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+					$client = new Client();
+					$client->setAdapter('Zend\Http\Client\Adapter\Curl');
+					$client->setUri($uri);
+					$result = $client->send();
+					$body = $result->getBody();
 				}
-				$this->getRoomTable()->saveRoom ( $room );
+				$this->getRoomTable()->saveRoom($room);
+				//$this->createFlashMessage("BP0");
 				$this->createMessage("Protokoll", "Raum '" . $room->getName() . "' konfiguriert.");
 				return $this->redirect()->toRoute('home');
 			}

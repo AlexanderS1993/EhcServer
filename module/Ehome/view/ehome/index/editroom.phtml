@@ -12,16 +12,10 @@ $form->prepare();
         <dd><?php echo $this->formInput($form->get('humidity')) ?></dd>
         <dt><?php echo $this->formLabel($form->get('temperature')) ?></dt>
         <dd><?php echo $this->formInput($form->get('temperature')) ?></dd>
-        <dt><?php echo $this->formLabel($form->get('lightone')) ?></dt>
-        <dd><?php echo $this->formRadio($form->get('lightone')) ?></dd>
-        <dt><?php echo $this->formLabel($form->get('lighttwo')) ?></dt>
-        <dd><?php echo $this->formRadio($form->get('lighttwo')) ?></dd>
-        <dt><?php echo $this->formLabel($form->get('window')) ?></dt>
-        <dd><?php echo $this->formRadio($form->get('window')) ?></dd>
-        <dt><?php echo $this->formLabel($form->get('door')) ?></dt>
-        <dd><?php echo $this->formRadio($form->get('door')) ?></dd>
+        <dt><?php echo $this->formLabel($form->get('switch')) ?></dt>
+        <dd><?php echo $this->formRadio($form->get('switch')) ?></dd>
         <?php if ($this->redirect): ?>
-            <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
+        <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
         <?php endif ?>
         <dd><?php echo $this->formInput($form->get('submit')) ?></dd>
     </dl>
