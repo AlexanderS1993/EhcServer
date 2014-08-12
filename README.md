@@ -50,8 +50,7 @@ Deployment
 * Aktuelle Zend Framework Version holen;
 * Aktuelle Version der ZendFramework-Module holen;
 * Aktuelle Version der PHP-Bibliotheken holen;
-* ---
-* Datenbank bauen;
+* Datenbank bauen bzw. Dump einspielen, Namenskonvention ehcserver_branchname;
 * Automatisierte Tests starten;
 * Manuelle Tests ausfuehren;
 
