@@ -8,9 +8,11 @@ if ($ehomeConfig['floorplan'] != ""){
 $floorplanHeader = $ehomeConfig['residentUser'] . ", " . $ehomeConfig['residentStreet'] . ", " .  $ehomeConfig['residentCity'];
 
 // process event table to messages
+$months = array("0", "Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez");
 $logMessages = array();
 $healthMessages = array();
 $warningMessages = array();
+$energyMessages = array();
 foreach($events as $event){
 	if ($event->getType() == "message"){
 		$logMessages[] = $event;
@@ -20,6 +22,9 @@ foreach($events as $event){
 	}
 	if ($event->getType() == "health"){
 		$healthMessages[] = $event;
+	}
+	if ($event->getType() == "energy"){
+		$energyMessages[] = $event;
 	}
 }
 ?>
@@ -268,42 +273,7 @@ echo "</table>"
 									<canvas id="weightGraph" width="500" height="150">[No canvas support]</canvas>
 									<canvas id="pulseGraph" width="500" height="150">[No canvas support]</canvas>
 									<script>
-        window.onload = function()
-        {
-            var weightLine = new RGraph.Line('weightGraph', [82.4,82.8,82.6,82.2,82.0,79.3,79.6,79.1,78.2,78.9,77.3])
-			.Set('title','Gewichtsentwicklung 2013')
-            .Set('spline', true)
-            .Set('numxticks', 0)
-            .Set('numyticks', 0)
-            .Set('hmargin', 10)
-            .Set('background.grid.autofit.numvlines', 11)
-            .Set('colors', ['orange'])
-            .Set('linewidth', 5)
-            .Set('gutter.left', 40)
-            .Set('gutter.right', 15)
-            .Set('labels',['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov'])
-            .Set('shadow',true)
-            .Set('shadow.color','#aaa')
-            .Set('shadow.blur',5)
-            .Draw();
-            
-            var pulseGraph = new RGraph.Line('pulseGraph', [65,68,66,61,68,72,66,63,66,68,69])
-			.Set('title','Pulsentwicklung 2013')
-            .Set('spline', true)
-            .Set('numxticks', 0)
-            .Set('numyticks', 0)
-            .Set('hmargin', 10)
-            .Set('background.grid.autofit.numvlines', 11)
-            .Set('colors', ['orange'])
-            .Set('linewidth', 5)
-            .Set('gutter.left', 40)
-            .Set('gutter.right', 15)
-            .Set('labels',['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov'])
-            .Set('shadow',true)
-            .Set('shadow.color','#aaa')
-            .Set('shadow.blur',5)
-            .Draw();
-        };
+
     	</script>
 									<!-- RGraph Lib // end -->
 								</div>
@@ -316,10 +286,198 @@ echo "</table>"
 					<div class="span12">
 						<h2>Energiedaten</h2>
 						<p>
-							[<a class="show_hide" href="#" rel="#messages">+/-</a>]
+							[<a class="show_hide" href="#" rel="#energy">+/-</a>]
 						</p>
-						<div id='messages'>
-							<p>Blindtext</p>
+						<div id='energy'>
+							<!-- Sub containers -->
+							<div class='row'>
+								<div class='span6'>
+<?php
+echo "<table border='1px'>";
+echo "<tr>";
+echo "<th>Datum</th>";
+echo "<th>Uhrzeit</th>";
+echo "<th>Meldung</th>";
+echo "<th>Wert</th>";
+echo "<th>Bemerkung</th>";
+echo "</tr>";
+$energyMessageCounter = 0;
+$energyMessagesReversed = array_reverse($energyMessages);
+foreach($energyMessagesReversed as $energyMessage){
+	if ($energyMessageCounter > 5){
+		continue;
+	}
+	echo "<tr>";
+	echo "<td>";
+	$date = new DateTime($energyMessage->getStart());
+	echo $date->format('d.m.Y');
+	echo "</td>";
+	echo "<td>";
+	$date = new DateTime($energyMessage->getStart());
+	echo $date->format('h:m');
+	echo "</td>";
+	echo "<td>";
+	echo $energyMessage->getName();
+	echo "</td>";
+	echo "<td>";
+	echo $energyMessage->getValue();
+	echo "</td>";
+	echo "<td>";
+	if ($energyMessage->getDone() == 1){
+		echo "<span style='color: green;'>OK</span>";
+	} else {
+		echo "<span style='color: red;'>ACHTUNG</span>";
+	}
+	echo "</td>";
+	echo "</tr>";
+	$energyMessageCounter++;
+}
+echo "</table>";
+echo "</div>";
+echo "<div class='span6'>";
+echo '<canvas id="voltampereGraph" width="500" height="150">[No canvas support]</canvas>';
+?>
+								<!-- </div> 
+								<div class='span6'> --> 
+										<!-- RGraph Lib // start -->
+										<!-- <canvas id="voltampereGraph" width="500" height="150">[No canvas support]</canvas> -->
+										<script>
+window.onload = function()
+{
+	var weightLine = new RGraph.Line('weightGraph', [82.4,82.8,82.6,82.2,82.0,79.3,79.6,79.1,78.2,78.9,77.3])
+	 .Set('title','Gewichtsentwicklung 2013')
+	 .Set('spline', true)
+	 .Set('numxticks', 0)
+	 .Set('numyticks', 0)
+	 .Set('hmargin', 10)
+	 .Set('background.grid.autofit.numvlines', 11)
+     .Set('colors', ['orange'])
+     .Set('linewidth', 5)
+     .Set('gutter.left', 40)
+     .Set('gutter.right', 15)
+     .Set('labels',['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov'])
+     .Set('shadow',true)
+     .Set('shadow.color','#aaa')
+     .Set('shadow.blur',5)
+     .Draw();
+                
+	var pulseGraph = new RGraph.Line('pulseGraph', [65,68,66,61,68,72,66,63,66,68,69])
+     .Set('title','Pulsentwicklung 2013')
+     .Set('spline', true)
+     .Set('numxticks', 0)
+     .Set('numyticks', 0)
+     .Set('hmargin', 10)
+     .Set('background.grid.autofit.numvlines', 11)
+     .Set('colors', ['orange'])
+     .Set('linewidth', 5)
+     .Set('gutter.left', 40)
+     .Set('gutter.right', 15)
+     .Set('labels',['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov'])
+     .Set('shadow',true)
+     .Set('shadow.color','#aaa')
+     .Set('shadow.blur',5)
+     .Draw();
+
+	<?php
+		// Diese schleife sortiert die Daten in ein entsprechendes Array (z. B. Amperemessungen in das Array '$ampere').
+		$countVA = 0;
+		foreach ($energyMessages as $enMessage)
+		{
+			$dateTemp = new DateTime($enMessage->getStart());
+			//if ($dateTemp->format('Y') == '2014')
+			//{
+				$dateMonth = $dateTemp->format('m') + 0;
+				$month = $months[$dateMonth];
+	
+				if ($enMessage->getName() == "Amperemessung")
+				{
+					$ampere[] = array(
+							"value" => $enMessage->getValue(),
+							"month" => $month,
+					);
+				}
+				else if ($enMessage->getName() == "Voltmessung")
+				{
+					$volt[] = array(
+							"value" => $enMessage->getValue(),
+							"month" => $month,
+					);
+					$countVA++;
+				}
+			//}
+		}
+		
+		// Diese Schleife fügt die Daten der beiden Arrays in ein neues Array für die Anzeige zusammen.
+		//for ($count = 4; $count > -1; $count = $count-1)
+		foreach ($ampere As $amp)
+		{
+			$valueTemp = $amp["value"];
+	
+			foreach ($volt as $vol)
+			{
+				if ($vol["month"] == $amp["month"])
+				{
+					$valueTemp = $valueTemp * $vol["value"];
+					break;
+				}
+			}
+	
+			$voltAmpere[] = array(
+					"value" => $valueTemp,
+					"month" => $amp["month"],
+			);
+		}
+		
+		$valueData = '';
+		$monthLabel = '';
+		
+		// Diese Schleife fügt die Strings für die Anzeige aus dem Array '$voltAmpere' zusammen.
+		foreach ($voltAmpere As $va)
+		{
+			// Anzeigestring für den Graphen an sich
+			if ($valueData == '')
+			{
+				$valueData = $va["value"];
+			}
+			else
+			{
+				$valueData .= ', '.$va["value"];
+			}
+			
+			// Anzeigestring für die Labels unterhalb des Graphens
+			if ($monthLabel == '')
+			{
+				$monthLabel = '"'.$va["month"].'"';
+			}
+			else
+			{
+				$monthLabel .= ', "'.$va["month"].'"';
+			}
+		}
+	?>
+    
+	var voltampereLine = new RGraph.Line('voltampereGraph', [<?php echo $valueData; ?>])
+	 .Set('title','Voltamperemessungen 2014')
+     .Set('spline', true)
+     .Set('numxticks', 0)
+     .Set('numyticks', 0)
+     .Set('hmargin', 10)
+     //.Set('background.grid.autofit.numvlines', 11)
+     .Set('background.grid.autofit.numvlines', <?php echo $countVA - 1; ?>)
+     .Set('colors', ['orange'])
+     .Set('linewidth', 5)
+     .Set('gutter.left', 40)
+     .Set('gutter.right', 15)
+     .Set('labels',[<?php echo $monthLabel; ?>])
+     .Set('shadow',true)
+     .Set('shadow.color','#aaa')
+     .Set('shadow.blur',5)
+	 .Draw();
+	
+};
+    								</script>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
