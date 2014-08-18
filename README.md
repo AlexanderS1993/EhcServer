@@ -85,13 +85,16 @@ putenv('APPLICATION_ENV=development');
 
 Deployment
 ----------
+* Serverumgebung auf Updates pruefen;
 * Aktuelle Github-Version des master-Branches holen;
 * Aktuelle Zend Framework Version holen;
 * Aktuelle Version der ZendFramework-Module holen;
 * Aktuelle Version der PHP-Bibliotheken holen;
 * Datenbank bauen bzw. Dump einspielen, Namenskonvention ehcserver_branchname;
-* Automatisierte Tests starten;
+* Automatisierte Tests starten (OrgaManager);
 * Manuelle Tests ausfuehren;
+* ...
+* Versionsarchiv erstellen und ablegen;
 
 Manuelles Testprotokoll
 -----------------------
