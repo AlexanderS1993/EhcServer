@@ -137,33 +137,39 @@ class IndexController extends AbstractActionController {
 	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
 		
 		// TODO current use case under development:
+		// use dropbox api
+		require_once "dropbox-sdk/Dropbox/autoload.php";
+		
+		
+		
+		// Aktivitaetssensor
 		// detect humidity and temperature
-		//Debug::dump("BP0"); error_log("BP0", 0);
-		$config = $this->getServiceLocator()->get('config');
-		$ehomeConfig = $config['ehomeConfig'];
-		$fhemServerIp = $ehomeConfig['fhemServerIp'];
-		$client = new Client();
-		$client->setAdapter ( 'Zend\Http\Client\Adapter\Curl' );
-		$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.listtemp={FW_devState%28%22TemperaturUndLuftfeuchtigkeit%22,%22%22%29}&XHR=1';
-		$client->setUri($uri);
-		$result = $client->send();
-		$body = $result->getBody();
-		$roomId = 4; // grab from config
-		$room = $this->getRoomTable()->getRoom($roomId);
-		$dbValueTemperature = $room->getTemperature();
-		$dbValueHumidity = $room->getHumidity();
-		$fhemValueTemperature = $this->getValueToKey($body, "T:"); // TODO use const
-		$fhemValueHumidity = $this->getValueToKey($body, "H:"); // TODO use const
-		Debug::dump("DB-ValueTemperature " . $dbValueTemperature . "; fhemValueTemperature " . $fhemValueTemperature. "; " . " DB-ValueHumidity " . $dbValueHumidity . "; fhemValueHumidity " . $fhemValueHumidity . "; ");
-		//error_log("DB-Value " . $dbValue . "; fhemValue " . $fhemValue. "; ", 0);
-		if ($dbValueTemperature != $fhemValueTemperature){
-			$this->updateTemperature($roomId, $fhemValueTemperature);
-		}
-		if ($dbValueHumidity != $fhemValueHumidity){
-			$this->updateHumidity($roomId, $fhemValueHumidity);
-		}
-		// works: result body <div id="TemperaturUndLuftfeuchtigkeit" class="col2">T: 26.5 H: 36</div>
-		Debug::dump("BP1");
+// 		//Debug::dump("BP0"); error_log("BP0", 0);
+// 		$config = $this->getServiceLocator()->get('config');
+// 		$ehomeConfig = $config['ehomeConfig'];
+// 		$fhemServerIp = $ehomeConfig['fhemServerIp'];
+// 		$client = new Client();
+// 		$client->setAdapter ( 'Zend\Http\Client\Adapter\Curl' );
+// 		$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.listtemp={FW_devState%28%22TemperaturUndLuftfeuchtigkeit%22,%22%22%29}&XHR=1';
+// 		$client->setUri($uri);
+// 		$result = $client->send();
+// 		$body = $result->getBody();
+// 		$roomId = 4; // grab from config
+// 		$room = $this->getRoomTable()->getRoom($roomId);
+// 		$dbValueTemperature = $room->getTemperature();
+// 		$dbValueHumidity = $room->getHumidity();
+// 		$fhemValueTemperature = $this->getValueToKey($body, "T:"); // TODO use const
+// 		$fhemValueHumidity = $this->getValueToKey($body, "H:"); // TODO use const
+// 		Debug::dump("DB-ValueTemperature " . $dbValueTemperature . "; fhemValueTemperature " . $fhemValueTemperature. "; " . " DB-ValueHumidity " . $dbValueHumidity . "; fhemValueHumidity " . $fhemValueHumidity . "; ");
+// 		//error_log("DB-Value " . $dbValue . "; fhemValue " . $fhemValue. "; ", 0);
+// 		if ($dbValueTemperature != $fhemValueTemperature){
+// 			$this->updateTemperature($roomId, $fhemValueTemperature);
+// 		}
+// 		if ($dbValueHumidity != $fhemValueHumidity){
+// 			$this->updateHumidity($roomId, $fhemValueHumidity);
+// 		}
+// 		// works: result body <div id="TemperaturUndLuftfeuchtigkeit" class="col2">T: 26.5 H: 36</div>
+// 		Debug::dump("BP1");
 		
 		// use case turn ventilator off
 // 		$config = $this->getServiceLocator()->get('config');
