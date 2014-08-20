@@ -49,11 +49,16 @@ Snippets
 --------
 Apache-2-Error-Datei anzeigen: tail -f /var/log/apache2/error.log 
 Anmelden am Datenbankserver: mysql -u [user] -p [pass] 
+FHEM-API Switch anschalten: ...?cmd.Ventilator=set Ventilator off & room=Infotainment;
+FHEM-API Humidity lesen: ...?cmd.listtemp={FW_devState%28%22TemperaturUndLuftfeuchtigkeit%22,%22%22%29}&XHR=1 Ergebnis: result body <div id="TemperaturUndLuftfeuchtigkeit" class="col2">T: 26.5 H: 36</div>
 Datenbanken anzeigen: show databases; 
 Datenbank anwaehlen: use [database];
 Datenbank einspielen: mysql -u [uname] -p[pass] [db_to_restore] < [backupfile.sql] 
 Datenbank exportieren: mysqldump -u [user] -p  [dbname] > /home/myusername/backupfile.sql
 Datenbank kopieren in shell: mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -p[password] db2 
+SSH Eclipse ssh -X xxxxx@xxx.xxx.xxx.xx /home/ehome/software/eclipse/eclipse-php/luna/eclipse/eclipse
+SSH Firefox ssh -X xxxxx@xxx.xxx.xxx.xx firefox --no-remote -P username
+SSH MySQL ssh xxxxx@xxx.xxx.xxx.xx; mysql -u xxxx -p;
 Tabellen anzeigen: show tables; 
 Tabelleneintraege anzeigen: select * from [table]; 
 Tabelleneintraege aktualisieren: update room set humidity=20 where id=1; 

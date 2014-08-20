@@ -27,18 +27,8 @@ return array (
 				// das Jobaevent auch direkt festgelegt werden.
 				array('name' => 'Ventilator', 'id' =>  1, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOn"), 
 				array('name' => 'Ventilator', 'id' =>  2, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOff"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 3, 'type' => 'humidity', 'roomId' => 5, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 4, 'type' => 'temperature', 'roomId' => 5, 'typeId' => 1, "value" => "read"),
 				array('name' => 'Luftfeuchtigkeit', 'id' =>  5, 'type' => 'humidity', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 6, 'type' => 'humidity', 'roomId' => 1, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 7, 'type' => 'temperature', 'roomId' => 1, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 8, 'type' => 'temperature', 'roomId' => 2, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 9, 'type' => 'temperature', 'roomId' => 3, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 10, 'type' => 'temperature', 'roomId' => 6, 'typeId' => 1, "value" => "read"),
 				array('name' => 'Temperatur', 'id' => 11, 'type' => 'temperature', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 12, 'type' => 'humidity', 'roomId' => 2, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 13, 'type' => 'humidity', 'roomId' => 3, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Luftfeuchtigkeit', 'id' => 14, 'type' => 'humidity', 'roomId' => 6, 'typeId' => 1, "value" => "read"),
 			),
 		),
 		'ehomeBundle' => array( 

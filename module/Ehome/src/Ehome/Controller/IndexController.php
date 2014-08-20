@@ -44,7 +44,7 @@ class IndexController extends AbstractActionController {
 						$roomId = $ehomeConfigAction['roomId'];
 						$actionType = $ehomeConfigAction['type'];
 						$actionValue = $ehomeConfigAction['value'];
-							// querie detection
+						// querie detection
 						if ($actionType == 'switch') { // TODO use const vars!
 							if ($actionValue == 'turnOn') {
 								$room = $this->getRoomTable ()->getRoom ( $roomId );
@@ -53,7 +53,7 @@ class IndexController extends AbstractActionController {
 								$fhemServerIp = $ehomeConfig ['fhemServerIp'];
 								// TODO think about exception handling to detect if fhem call was successful
 								// TODO create method to prevent code duplication
-								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=Infotainment';
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator on & room=all';
 								$client = new Client();
 								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
 								$client->setUri($uri);
@@ -64,7 +64,7 @@ class IndexController extends AbstractActionController {
 								$room->setSwitch(0);
 								$this->getRoomTable()->saveRoom($room);
 								$fhemServerIp = $ehomeConfig ['fhemServerIp'];
-								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=Infotainment';
+								$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.Ventilator=set Ventilator off & room=all';
 								$client = new Client();
 								$client->setAdapter('Zend\Http\Client\Adapter\Curl');
 								$client->setUri($uri);
@@ -137,9 +137,35 @@ class IndexController extends AbstractActionController {
 	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
 		
 		// TODO current use case under development:
+		// detect humidity and temperature
+		//Debug::dump("BP0"); error_log("BP0", 0);
+		$config = $this->getServiceLocator()->get('config');
+		$ehomeConfig = $config['ehomeConfig'];
+		$fhemServerIp = $ehomeConfig['fhemServerIp'];
+		$client = new Client();
+		$client->setAdapter ( 'Zend\Http\Client\Adapter\Curl' );
+		$uri = 'http://' . $fhemServerIp . ':8083/fhem?cmd.listtemp={FW_devState%28%22TemperaturUndLuftfeuchtigkeit%22,%22%22%29}&XHR=1';
+		$client->setUri($uri);
+		$result = $client->send();
+		$body = $result->getBody();
+		$roomId = 4; // grab from config
+		$room = $this->getRoomTable()->getRoom($roomId);
+		$dbValueTemperature = $room->getTemperature();
+		$dbValueHumidity = $room->getHumidity();
+		$fhemValueTemperature = $this->getValueToKey($body, "T:"); // TODO use const
+		$fhemValueHumidity = $this->getValueToKey($body, "H:"); // TODO use const
+		Debug::dump("DB-ValueTemperature " . $dbValueTemperature . "; fhemValueTemperature " . $fhemValueTemperature. "; " . " DB-ValueHumidity " . $dbValueHumidity . "; fhemValueHumidity " . $fhemValueHumidity . "; ");
+		//error_log("DB-Value " . $dbValue . "; fhemValue " . $fhemValue. "; ", 0);
+		if ($dbValueTemperature != $fhemValueTemperature){
+			$this->updateTemperature($roomId, $fhemValueTemperature);
+		}
+		if ($dbValueHumidity != $fhemValueHumidity){
+			$this->updateHumidity($roomId, $fhemValueHumidity);
+		}
+		// works: result body <div id="TemperaturUndLuftfeuchtigkeit" class="col2">T: 26.5 H: 36</div>
+		Debug::dump("BP1");
 		
 		// use case turn ventilator off
-		Debug::dump("BP0");
 // 		$config = $this->getServiceLocator()->get('config');
 // 		$ehomeConfig = $config['ehomeConfig'];
 // 		$fhemServerIp = $ehomeConfig['fhemServerIp'];
@@ -149,9 +175,6 @@ class IndexController extends AbstractActionController {
 // 		$client->setUri($uri);
 // 		$result = $client->send();
 // 		$body = $result->getBody();
-		Debug::dump("BP1");
-		
-		
 		
 		// use case: fetch CO2-data // TODO
 		// URL http://169.254.1.1/ GassensorAdHoc 
@@ -316,7 +339,7 @@ class IndexController extends AbstractActionController {
 		$events = $this->getEventTable()->fetchAll();
 		$config = $this->getServiceLocator()->get('Config');
 		$ehomeConfig = $config['ehomeConfig'];
-		return new ViewModel ( array (
+		return new ViewModel( array (
 				'rooms' => $rooms,
 				'events' => $events,
 				'useremail' => $email,
@@ -480,6 +503,42 @@ class IndexController extends AbstractActionController {
 			$msg = $key;
 		}
 		$this->flashMessenger()->addMessage($msg);
+	}
+	
+	private function getValueToKey($string, $key){
+		$tokens = explode($key, $string);
+		if ($key == "T:"){
+			// array [0] = html node
+			// array [1] = value H: value2
+			$postKey = "H:"; // TODO constant
+			$postString = $tokens[1];
+			$postVal = explode($postKey, $postString);
+			$val = trim($postVal[0]);
+			Debug::dump($val); 
+		} else if ($key == "H:"){
+			$val = trim($tokens[1]);
+			Debug::dump($val);
+		} else {
+			// TODO think!
+		}
+		// TODO unit tests;
+		return $val;	
+	}	
+	
+	private function updateTemperature($roomId, $temperature){
+		// update and save room to database
+		// TODO
+		$room = $this->getRoomTable()->getRoom($roomId);
+		$room->setTemperature($temperature);
+		$this->getRoomTable()->saveRoom($room); 
+	}
+	
+	private function updateHumidity($roomId, $humidity){
+		// update and save room to database
+		// TODO
+		$room = $this->getRoomTable()->getRoom($roomId);
+		$room->setHumidity($humidity);
+		$this->getRoomTable()->saveRoom($room);
 	}
 }
 ?>
