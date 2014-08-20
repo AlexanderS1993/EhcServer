@@ -50,6 +50,19 @@ class RoomForm extends Form {
 								)
 						)
 		) );
+		$this->add ( array (
+				'type' => 'Zend\Form\Element\Radio',
+				'name' => 'motion',
+				'attributes' => array(
+						'readonly' => 'true'),
+				'options' => array (
+						'label' => 'Bewegung',
+						'value_options' => array (
+								'0' => 'Nein',
+								'1' => 'Ja'
+						)
+				)
+		) );
 		$this->add(array( // submit;
 				'name' => 'submit',
 				'attributes' => array(

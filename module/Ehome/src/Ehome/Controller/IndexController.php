@@ -138,9 +138,6 @@ class IndexController extends AbstractActionController {
 		
 		// TODO current use case under development:
 		// use dropbox api
-		require_once "dropbox-sdk/Dropbox/autoload.php";
-		
-		
 		
 		// Aktivitaetssensor
 		// detect humidity and temperature

@@ -9,6 +9,7 @@ class Room {
 	private $humidity;
 	private $temperature;
 	private $switch;
+	private $motion;
 
 	public function exchangeArray($data) {
 		$this->id = (! empty ( $data ['id'] )) ? $data ['id'] : null;
@@ -16,6 +17,7 @@ class Room {
 		$this->humidity = (! empty ( $data ['humidity'] )) ? $data ['humidity'] : null;
 		$this->temperature = (! empty ( $data ['temperature'] )) ? $data ['temperature'] : null;
 		$this->switch = (! empty ( $data ['switch'] )) ? $data ['switch'] : null;
+		$this->motion = (! empty ( $data ['motion'] )) ? $data ['motion'] : null;
 	}
 	
 	public function getArrayCopy(){
@@ -60,5 +62,13 @@ class Room {
 	
 	public function setSwitch($value) {
 		$this->switch = $value;
+	}
+	
+	public function getMotion() {
+		return $this->motion;
+	}
+	
+	public function setMotion($value) {
+		$this->motion = $value;
 	}
 }

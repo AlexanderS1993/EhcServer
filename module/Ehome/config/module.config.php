@@ -27,8 +27,9 @@ return array (
 				// das Jobaevent auch direkt festgelegt werden.
 				array('name' => 'Ventilator', 'id' =>  1, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOn"), 
 				array('name' => 'Ventilator', 'id' =>  2, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOff"),
-				array('name' => 'Luftfeuchtigkeit', 'id' =>  5, 'type' => 'humidity', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 11, 'type' => 'temperature', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
+				array('name' => 'Luftfeuchtigkeit', 'id' =>  3, 'type' => 'humidity', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
+				array('name' => 'Temperatur', 'id' => 4, 'type' => 'temperature', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
+				array('name' => 'Bewegung', id =>  5, 'type' => 'motion', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
 			),
 		),
 		'ehomeBundle' => array( 

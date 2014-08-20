@@ -139,6 +139,7 @@ echo "</ul>"
 					<th>Name</th>
 					<th>Luftfeuchtigkeit</th>
 					<th>Temperatur</th>
+					<th>Bewegung</th>
 					<th>Schalter</th>
 					<th>Aktion</th>
 				</tr>
@@ -174,6 +175,7 @@ foreach($this->rooms as $room ){
 	if (! $isTemperatureRelevant){
 		echo "<td style='text-align: right;'></td>";
 	}
+	echo "<td style='text-align: right;'>" . $room->getMotion() . "</td>";
 	if ($room->getSwitch() == 100){
 		$formActionId = 0;
 		$isRelevant = false;

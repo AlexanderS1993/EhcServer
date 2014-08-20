@@ -35,6 +35,7 @@ class RoomTable {
 				'humidity' => $room->getHumidity(),
 				'temperature' => $room->getTemperature(),
 				'switch' => $room->getSwitch(),
+				'motion' => $room->getMotion(),
 		);
 		$id = (int) $room->getId();
 		if ($id == 0) {

@@ -14,6 +14,8 @@ $form->prepare();
         <dd><?php echo $this->formInput($form->get('temperature')) ?></dd>
         <dt><?php echo $this->formLabel($form->get('switch')) ?></dt>
         <dd><?php echo $this->formRadio($form->get('switch')) ?></dd>
+        <dt><?php echo $this->formLabel($form->get('motion')) ?></dt>
+        <dd><?php echo $this->formRadio($form->get('motion')) ?></dd>
         <?php if ($this->redirect): ?>
         <input type="hidden" name="redirect" value="<?php echo $this->escapeHtml($this->redirect) ?>" />
         <?php endif ?>
