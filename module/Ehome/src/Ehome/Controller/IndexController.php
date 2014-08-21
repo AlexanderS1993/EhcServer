@@ -138,7 +138,10 @@ class IndexController extends AbstractActionController {
 	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
 		
 		// TODO current use case under development:
-		// use dropbox api
+		
+		// connect to zwave api
+		
+		// use dropbox api TODO
 		
 		// Aktivitaetssensor
 		// detect humidity and temperature

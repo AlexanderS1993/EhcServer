@@ -32,51 +32,8 @@ class JsonController extends AbstractActionController {
 	}
 	// ======================================================================================================================
 	
-	
-	
-	public function indexAction(){ // call .../ehomejson/user/pass/
+	public function indexAction(){ // call .../ehomejson/index/user/pass/
 		return new JsonModel(array('connection' => 'ok'));
-	}
-	
-	public function togglelightoneAction(){
-		// room, user, pass
-		$username = "";
-		$password = "";
-		if ($this->authenticate($username, $password)){
-			// /ehomejson/togglelightone/1
-			$roomId = (int) $this->params()->fromRoute('slugA', 0);
-			$room = $this->getRoomTable()->getRoom($roomId);
-			$state = $room->getLightone();
-			$config = $this->getServiceLocator()->get('Config');
-			$jobaGlobalOptions = $config['jobaGlobalOptions'];
-			$ip = $jobaGlobalOptions['networkIp'];
-			if ($state == "100"){
-				$room->setLightone("0");
-				$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose off\&room=Buero';
-				// call fhem url with zf2 curl
-				$client = new Client();
-				$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-				$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose off&room=Buero';
-				$client->setUri($uri);
-				$result = $client->send();
-				$body = $result->getBody();
-				$this->createMessage("Protokoll", "[App] Licht Nummer Eins im Raum '" . $room->getName() . "' ausgeschaltet.");
-			} else {
-				$room->setLightone("100");
- 				// call fhem url with php curl
-				$client = new Client();
-				$client->setAdapter('Zend\Http\Client\Adapter\Curl');
-				$uri = 'http://' . $ip . ':8083/fhem?cmd.steckdose=set steckdose on&room=Buero';
-				$client->setUri($uri);
-				$result = $client->send();
-				$body = $result->getBody();
-				$this->createMessage("Protokoll", "[App] Licht Nummer Eins im Raum '" . $room->getName() . "' eingeschaltet.");
-			}
-			$this->getRoomTable()->saveRoom($room);
-			return new JsonModel(array('result' => 'true'));
-		} else {
-			return new JsonModel(array('result' => 'false'));
-		}
 	}
 	
 	public function getEventTable(){
