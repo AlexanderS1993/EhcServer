@@ -25,11 +25,13 @@ return array (
 				// 1 = es ist ein read-only sensor, etwa die Luftfeuchtigkeit;
 				// 2 = es ist eine Komponente, die genau zwei Zustaende annehmen kann, sprich 0 und 1 oder an und aus; 
 				// das Jobaevent auch direkt festgelegt werden.
-				array('name' => 'Ventilator', 'id' =>  1, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOn"), 
-				array('name' => 'Ventilator', 'id' =>  2, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOff"),
-				array('name' => 'Luftfeuchtigkeit', 'id' =>  3, 'type' => 'humidity', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Temperatur', 'id' => 4, 'type' => 'temperature', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
-				array('name' => 'Bewegung', id =>  5, 'type' => 'motion', 'roomId' => 4, 'typeId' => 1, "value" => "read"),
+				array('name' => 'Ventilator', 'id' =>  1, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOn", protocol => "HomeMatic"), 
+				array('name' => 'Ventilator', 'id' =>  2, 'type' => 'switch', 'roomId' => 4, 'typeId' => 2, "value" => "turnOff", protocol => "HomeMatic"),
+				array('name' => 'Luftfeuchtigkeit', 'id' =>  3, 'type' => 'humidity', 'roomId' => 4, 'typeId' => 1, "value" => "read", protocol => "HomeMatic"),
+				array('name' => 'Temperatur', 'id' => 4, 'type' => 'temperature', 'roomId' => 4, 'typeId' => 1, "value" => "read", protocol => "HomeMatic"),
+				array('name' => 'Bewegung', id =>  5, 'type' => 'motion', 'roomId' => 4, 'typeId' => 1, "value" => "read", protocol => "HomeMatic"),
+				array('name' => 'Licht', id =>  6, 'type' => 'switch', 'roomId' => 5, 'typeId' => 2, "value" => "turnOn", protocol => "ZWave"),
+				array('name' => 'Licht', id =>  7, 'type' => 'switch', 'roomId' => 5, 'typeId' => 2, "value" => "turnOff", protocol => "ZWave"),
 			),
 		),
 		'ehomeBundle' => array( 
