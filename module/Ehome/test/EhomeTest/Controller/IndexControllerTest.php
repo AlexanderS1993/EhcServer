@@ -46,7 +46,7 @@ class IndexControllerTest extends \PHPUnit_Framework_TestCase
 		$str = "<div id='TemperaturUndLuftfeuchtigkeit' class='col2'>T: 26.5 H: 36</div>";
 		$exp = "26.5";
 		$act = $this->controller->getValueToKey($str, "T:");
-		var_dump($act);
+		// var_dump($act);
 	}
 	
 }
