@@ -75,6 +75,7 @@ class IndexController extends AbstractActionController {
 							}
 						} else if ($actionType == 'humidity'){ // nothing to do
 						} else if ($actionType == 'temperature'){ // nothing to do
+						} else if ($actionType == 'motion'){ // nothing to do
 						} else { throw new \RuntimeException("Action Detection failed!");
 						}
 					}
