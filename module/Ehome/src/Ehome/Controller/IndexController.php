@@ -335,10 +335,11 @@ class IndexController extends AbstractActionController {
 	// ======================================================================================================================
 	
 	public function indexAction(){
-		if (! $this->zfcUserAuthentication()->hasIdentity ()) { // check for valid session
-			$this->createFlashMessage('accessDenied');
-			return $this->redirect ()->toRoute ( static::ROUTE_LOGIN );
-		}
+		// TODO check for unit testability!
+ 		if ( ! $this->zfcUserAuthentication()->hasIdentity ()) { // check for valid session
+ 			$this->createFlashMessage('accessDenied');
+ 			return $this->redirect ()->toRoute ( static::ROUTE_LOGIN );
+ 		}
 		// scenario: submit button
 		$user = $this->zfcUserAuthentication()->getIdentity();
 		$email = $user->getEmail();
@@ -512,11 +513,9 @@ class IndexController extends AbstractActionController {
 		$this->flashMessenger()->addMessage($msg);
 	}
 	
-	private function getValueToKey($string, $key){
+	public function getValueToKey($string, $key){ // public due to unit test
 		$tokens = explode($key, $string);
 		if ($key == "T:"){
-			// array [0] = html node
-			// array [1] = value H: value2
 			$postKey = "H:"; // TODO constant
 			$postString = $tokens[1];
 			$postVal = explode($postKey, $postString);

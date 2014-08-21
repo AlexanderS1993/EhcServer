@@ -125,3 +125,8 @@ Pairing-Notizen
 * HomeMatic Bewegungsmelder
 * HomeMatic Funksteckdose
 * HomeMatic Luftfeuchtigkeit und Bewegung
+
+Unit-Tests
+----------
+* siehe framework.zend.com/manual/2.0/en/user-guide/unit-testing.html
+* PHPUnit-Installation giocc.com/installing-phpunit-on-ubuntu-11-04-natty-narwhal.html
