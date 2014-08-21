@@ -140,6 +140,15 @@ class IndexController extends AbstractActionController {
 		// TODO current use case under development:
 		
 		// connect to zwave api
+		Debug::dump("BP0");
+		$client = new Client();
+		$client->setAdapter( 'Zend\Http\Client\Adapter\Curl' );
+		$uriZwaveOff = "http://10.11.12.1:8083/ZWaveAPI/Run/devices%5B5%5D.instances%5B0%5D.Basic.Set%280%29"; // 0 fuer aus
+		$uriZwaveOn = "http://10.11.12.1:8083/ZWaveAPI/Run/devices%5B5%5D.instances%5B0%5D.Basic.Set%28255%29"; // 255 fuer an
+		$client->setUri($uriZwaveOn);
+		$result = $client->send();
+		$body = $result->getBody();
+		Debug::dump("BP1");
 		
 		// use dropbox api TODO
 		

@@ -60,6 +60,7 @@ Datenbank exportieren: mysqldump -u [user] -p  [dbname] > /home/myusername/backu
 Datenbank kopieren in shell: mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -p[password] db2 
 FHEM-API Switch anschalten: ...?cmd.Ventilator=set Ventilator off & room=Infotainment;
 FHEM-API Humidity lesen: ...?cmd.listtemp={FW_devState%28%22TemperaturUndLuftfeuchtigkeit%22,%22%22%29}&XHR=1 Ergebnis: result body <div id="TemperaturUndLuftfeuchtigkeit" class="col2">T: 26.5 H: 36</div>
+Netgear-Router (Netgear69): routerlogin.net (Problematisch bei zwei aktiven Netzwerken, besser IP siehe http://192.168.1.1/index.htm);
 SSH Eclipse ssh -X xxxxx@xxx.xxx.xxx.xx /home/ehome/software/eclipse/eclipse-php/luna/eclipse/eclipse
 SSH Firefox ssh -X xxxxx@xxx.xxx.xxx.xx firefox --no-remote -P username
 SSH MySQL ssh xxxxx@xxx.xxx.xxx.xx; mysql -u xxxx -p;
@@ -71,6 +72,11 @@ Tabellenspalte hinzufuegen (add) / entfernen (drop column) / aendern (change): a
 Tabellenspaltenstruktur anzeigen: show columns from room; 
 Eclipse-PHP-Debugging (XDebug-Installation: coderblog.de/how-to-install-use-configure-xdebug-ubuntu/; 
 XDebug-Eclipse-Verbindung, localhost und leeren Restpfad sollte auf index-Action verweisen) 
+ZWave-API-Setup: Raspberry mit Razberry-Aufsatz, WebUI im gleichen Netz (Default RaspberryPiWLan, raspberry) unter 10.11.12.1:8083;
+Zwave-API-Doc: razberry.z-wave.me/docs/Z-WayAPI.pdf und razberry.z-wave.me/docs/zwayDev.pdf
+Zwave-API-GetData as JSON: http://10.11.12.1:8083/ZWaveAPI/Data/0
+Zwave-API-SetStrommessgeraet http://10.11.12.1:8083/ZWaveAPI/Run/devices%5B5%5D.instances%5B0%5D.Basic.Set%28255%29
+Zwave-API-Set Strommessgeraet via JSON GetData-Analyse value bei Device 5 von 0 auf 255 erhoeht, diverse Timestamps neu gesetzt; Eclipse-Compare hilft bei Vergleich der Dateien; Device 5 key 37 level value
 
 Abhaengigkeiten
 ---------------
