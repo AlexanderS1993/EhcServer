@@ -1,6 +1,10 @@
 EhcServer
 =========
 
+Schnittstelle
+-------------
+Verbindungscheck : ehcserverip/ehomejson/index/user/pass
+
 Einleitung
 ----------
 Die EhcServer-Anwendung dient als Abstraktionsschicht zur Hausautomatisierung.
