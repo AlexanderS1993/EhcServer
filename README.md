@@ -58,6 +58,10 @@ Datenbank anwaehlen: use [database];
 Datenbank einspielen: mysql -u [uname] -p[pass] [db_to_restore] < [backupfile.sql] 
 Datenbank exportieren: mysqldump -u [user] -p  [dbname] > /home/myusername/backupfile.sql
 Datenbank kopieren in shell: mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -p[password] db2 
+DSS-API: FHEM_Wlan; https://192.168.188.22:8080/dss.wsdl oder https://192.168.188.22:8080/json/; Doku developer.digitalstrom.org/Architecture/dss-json.pdf
+DSS-API: Namen holen - apartment/getName
+DSS-API: Geraete holen - /json/apartment/getDevices Suche nach Namen liefert dsid mit dem key id;
+DSS-API: Werte eines Geraetes erhoehen oder erniedrigen: /json/device/turnOff?dsid=3303505d7f800004000021a9b
 FHEM-API Switch anschalten: ...?cmd.Ventilator=set Ventilator off & room=Infotainment;
 FHEM-API Humidity lesen: ...?cmd.listtemp={FW_devState%28%22TemperaturUndLuftfeuchtigkeit%22,%22%22%29}&XHR=1 Ergebnis: result body <div id="TemperaturUndLuftfeuchtigkeit" class="col2">T: 26.5 H: 36</div>
 Netgear-Router (Netgear69): routerlogin.net (Problematisch bei zwei aktiven Netzwerken, besser IP siehe http://192.168.1.1/index.htm);
