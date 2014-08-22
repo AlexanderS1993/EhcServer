@@ -133,6 +133,10 @@ class IndexController extends AbstractActionController {
 		return $this->redirect()->toRoute($route);
 	}
 	
+	public function extractToken($body){
+		return "xxx";
+	}
+	
 	// ========================================================================================================
 	// DEVELOPMENT AREA Webapp
 	public function tempAction() { // call: http://ehcserver.local/temp to work with slugs use: 
@@ -140,15 +144,22 @@ class IndexController extends AbstractActionController {
 		// TODO current use case under development:
 		
 		// connect to digitalstrom
-		
 		Debug::dump("BP0");
-		$client = new Client();
-		$client->setAdapter( 'Zend\Http\Client\Adapter\Curl' );
-		$uriZwaveOff = "https://192.168.188.22:8080/json/device/turnOff?dsid=303505d7f800004000021a9b"; // 0 fuer aus
-		$uriZwaveOn = "https://192.168.188.22:8080/json/device/turnOn?dsid=303505d7f800004000021a9b"; // 255 fuer an
-		$client->setUri($uriZwaveOn);
-		$result = $client->send();
-		$body = $result->getBody();
+		$config = array( // deal with ssl 
+				'adapter'   => 'Zend\Http\Client\Adapter\Curl',
+				'curloptions' => array(CURLOPT_SSL_VERIFYPEER => false, CURLOPT_SSL_VERIFYHOST => false),
+		);
+		$uriDssLogin = "https://192.168.188.22:8080/json/system/login?user=dssadmin\&password=dssadmin";
+		$uriDssOff = "https://192.168.188.22:8080/json/device/turnOff?dsid=303505d7f800004000021a9b"; // 0 fuer aus
+		$uriDssOn = "https://192.168.188.22:8080/json/device/turnOn?dsid=303505d7f800004000021a9b"; // 255 fuer an
+		$client = new Client($uriDssLogin, $config);
+		$resultLogin = $client->send();
+		$resultLoginBody = $resultLogin->getBody();
+		$client->setUri($uriDssOn);
+		$resultAction = $client->send();
+		$resultActionBody = $resultAction->getBody();
+		Debug::dump($resultLoginBody);
+		Debug::dump($resultActionBody);
 		Debug::dump("BP1");
 		
 		// connect to zwave api
